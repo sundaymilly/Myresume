@@ -1,1 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Naphtali Sunday · Web Developer, Data Analyst & MEAL Specialist</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--ac:#1a5a8c;--ac2:#2a7abf;--tx:#0f172a;--tx2:#475569;--mu:#94a3b8;--gl:rgba(255,255,255,.55);--gb:rgba(255,255,255,.75)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Inter',-apple-system,sans-serif;color:var(--tx);background:#fff;overflow:hidden;position:relative}
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none}
+body::before{width:46vw;height:46vw;background:#60a5fa66;top:-12vw;left:-8vw}
+body::after{width:40vw;height:40vw;background:#34d3994d;bottom:-14vw;right:-6vw}
+.app{position:relative;z-index:1;display:grid;grid-template-columns:300px 1fr;gap:20px;height:100dvh;padding:20px;max-width:1440px;margin:auto}
+.glass{background:var(--gl);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--gb);box-shadow:0 10px 40px rgba(15,23,42,.1),inset 0 1px 0 rgba(255,255,255,.85);border-radius:22px}
+/* aside */
+aside{padding:24px 18px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;min-height:0}
+.av{width:104px;height:104px;border-radius:50%;margin:0 auto;position:relative;cursor:pointer;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;font-weight:800;border:4px solid #fff;box-shadow:0 8px 28px rgba(26,90,140,.3);transition:.3s}
+.av:hover{transform:scale(1.05)}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.av i{position:absolute;right:2px;bottom:6px;width:18px;height:18px;background:#22c55e;border:3px solid #fff;border-radius:50%}
+.who{text-align:center}
+.who h1{font-size:21px;font-weight:800;letter-spacing:-.02em}.who h1 span{color:var(--ac)}
+.who p{font-size:12.5px;color:var(--tx2);margin-top:4px;line-height:1.5}
+.who .loc{font-size:12px;color:var(--mu);margin-top:6px}
+.avail{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;font-weight:700;color:#15803d;background:#dcfce7;padding:3px 12px;border-radius:20px}
+nav{display:flex;flex-direction:column;gap:4px}
+.nv{display:flex;align-items:center;gap:12px;padding:10px 12px;border:0;background:transparent;border-radius:12px;font:inherit;font-size:13px;font-weight:600;color:var(--tx2);cursor:pointer;text-align:left;transition:.25s}
+.nv i{width:18px;text-align:center;color:var(--ac)}
+.nv em{margin-left:auto;font-style:normal;font-size:10px;color:var(--mu)}
+.nv:hover{background:rgba(255,255,255,.6)}
+.nv.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 6px 18px rgba(26,90,140,.3)}
+.nv.on i,.nv.on em{color:#fff}
+.lbl{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mu);margin-bottom:6px}
+.dl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dl button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 4px;border:1px solid var(--gb);background:rgba(255,255,255,.6);border-radius:12px;font:inherit;font-size:11px;font-weight:700;color:var(--tx);cursor:pointer;transition:.25s}
+.dl button i{font-size:17px}
+.dl button:hover{background:var(--ac);color:#fff;transform:translateY(-2px)}.dl button:hover i{color:#fff!important}
+.soc{display:flex;justify-content:center;gap:8px}
+.soc a{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.6);color:var(--tx2);text-decoration:none;transition:.25s}
+.soc a:hover{background:var(--ac);color:#fff;transform:translateY(-2px)}
+/* book */
+.stage{display:flex;flex-direction:column;gap:14px;min-height:0;perspective:2400px}
+.book{position:relative;flex:1;min-height:0}
+.page{position:absolute;inset:0;padding:30px 36px;overflow-y:auto;transform-origin:left center;transition:transform .9s cubic-bezier(.65,.05,.25,1),opacity .6s ease;backface-visibility:hidden}
+.page[data-s=past]{transform:rotateY(-105deg);opacity:0;pointer-events:none}
+.page[data-s=future]{opacity:0;pointer-events:none;transform:scale(.97)}
+.page[data-s=active]{opacity:1;transform:none}
+.ph{margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid rgba(26,90,140,.2)}
+.ph small{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ac)}
+.ph h2{font-size:29px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.ph p{font-size:14px;color:var(--tx2)}
+.card{background:rgba(255,255,255,.5);border:1px solid var(--gb);border-radius:16px;padding:16px 18px;margin-bottom:12px;transition:.3s}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,23,42,.08)}
+.txt{font-size:14.5px;line-height:1.85;color:var(--tx2);margin-bottom:10px}.txt b{color:var(--tx)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.stat{text-align:center;padding:16px 8px;margin:0}
+.stat b{display:block;font-size:28px;font-weight:800;color:var(--ac)}
+.stat span{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.6);border:1px solid var(--gb);color:var(--tx2);transition:.25s}
+.chip i{color:var(--ac);font-size:12px}
+.chip:hover{background:var(--ac);color:#fff}.chip:hover i{color:#fff}
+.sub{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);margin:0 0 10px}
+.eh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.eh h3{font-size:16px;font-weight:700}
+.dt{font-size:11.5px;font-weight:600;color:var(--ac);background:rgba(26,90,140,.1);padding:3px 12px;border-radius:20px;white-space:nowrap}
+.org{font-size:13px;font-weight:600;color:var(--ac);margin:3px 0 8px}
+.card ul{list-style:none}
+.card li{position:relative;padding-left:18px;font-size:13.5px;color:var(--tx2);line-height:1.65;margin-bottom:3px}
+.card li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--ac)}
+.card li b{color:var(--tx)}
+.tg{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tg span{font-size:11px;font-weight:600;padding:2px 11px;border-radius:12px;background:rgba(26,90,140,.08);color:var(--ac)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ach{display:flex;gap:14px}
+.ach>i{flex:none;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;display:flex;align-items:center;justify-content:center}
+.ach h3{font-size:14.5px;font-weight:700;margin-bottom:2px}.ach p{font-size:13px;color:var(--tx2);line-height:1.6}
+.ct{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.ct>i{flex:none;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;display:flex;align-items:center;justify-content:center}
+.ct small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+.ct span{font-size:13.5px;font-weight:600;word-break:break-all}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.cta button{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border:0;border-radius:40px;font:inherit;font-size:13px;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 6px 18px rgba(26,90,140,.3);transition:.25s}
+.cta button:hover{transform:translateY(-2px)}
+/* controls */
+.ctl{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px}
+.nb{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:0;border-radius:40px;font:inherit;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--ac),var(--ac2));cursor:pointer;transition:.25s}
+.nb:disabled{opacity:.35;cursor:default}.nb:not(:disabled):hover{transform:translateY(-1px)}
+.mid{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--tx2)}
+.dots{display:flex;gap:7px}
+.dots button{width:9px;height:9px;border-radius:50%;border:0;background:rgba(26,90,140,.25);cursor:pointer;padding:0;transition:.3s}
+.dots button.on{width:26px;border-radius:6px;background:var(--ac)}
+/* modal */
+.modal{position:fixed;inset:0;z-index:99;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.7);backdrop-filter:blur(10px);padding:24px}
+.modal.on{display:flex}.modal img{max-width:min(440px,100%);max-height:80vh;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;z-index:120;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;color:#fff;background:#0f172a;transition:.35s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:960px){
+ body{overflow:auto}
+ .app{display:flex;flex-direction:column;height:auto;min-height:100dvh;padding:12px}
+ aside{overflow:visible}nav{flex-direction:row;overflow-x:auto;padding-bottom:4px}.nv{white-space:nowrap}.nv em{display:none}
+ .stage{height:84dvh;min-height:560px}
+ .page{padding:22px 18px}.stats{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.ph h2{font-size:24px}
+ .nb span{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+ <aside class="glass">
+  <div class="av" id="avatar" title="View photo">NS<img src="milly.jpeg" alt="Naphtali Sunday" onerror="this.remove()"><i></i></div>
+  <div class="who">
+   <h1>NAPHTALI <span>SUNDAY</span></h1>
+   <p>Programmer · Data Analyst<br>MEAL Specialist<br>IT Specialist</p>
+   <div class="loc"><i class="fas fa-location-dot"></i> Yola, Adamawa, Nigeria</div>
+   <span class="avail"><i class="fas fa-circle" style="font-size:7px"></i> Open to Work</span>
+  </div>
+  <div><div class="lbl">Sections</div><nav id="nav"></nav></div>
+  <div><div class="lbl">Download my Resume for offline use</div>
+   <div class="dl">
+    <button onclick="dlResume('pdf')"><i class="fas fa-file-pdf" style="color:#dc2626"></i>As PDF</button>
+    <button onclick="dlResume('doc')"><i class="fas fa-file-word" style="color:#2b579a"></i>As Word</button>
+    <button onclick="dlResume('txt')"><i class="fas fa-file-lines" style="color:#64748b"></i>As Text</button>
+   </div></div>
+  <div class="soc">
+   <a href="mailto:naphtalisunday2944@outlook.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+   <a href="https://www.linkedin.com/in/naphtali-sunday-aa6201244" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+   <a href="https://github.com/sundaymilly" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+  </div>
+ </aside>
+ <main class="stage">
+  <div class="book" id="book"></div>
+  <div class="glass ctl">
+   <button class="nb" id="prev"><i class="fas fa-arrow-left"></i><span>Previous</span></button>
+   <div class="mid"><div id="pgLbl"></div><div class="dots" id="dots"></div></div>
+   <button class="nb" id="next"><span>Next</span><i class="fas fa-arrow-right"></i></button>
+  </div>
+ </main>
+</div>
+<div class="modal" id="modal"><img src="milly.jpeg" alt="Naphtali Sunday" onerror="this.alt='Photo not found'"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ SINGLE SOURCE OF TRUTH (page + all resume formats) ============ */
+const R={
+ name:'NAPHTALI SUNDAY',title:'Web Developer · Data Analyst · MEAL Specialist · IT Specialist',
+ loc:'Yola, Adamawa, Nigeria',email:'naphtalisunday2944@gmail.com',
+ li:'linkedin.com/in/naphtali-sunday-aa6201244',gh:'github.com/sundaymilly',
+ about:[
+  "I'm <b>Naphtali Sunday</b>, a <b>Web Developer</b>, <b>Data Analyst</b> and <b>MEAL Specialist</b> with <b>6+ years</b> of experience building web applications and data systems and leading capacity-building initiatives.",
+  "I have worked extensively on <b>USAID/PEPFAR-funded</b> health programmes across Northeast Nigeria, managing HIV case-management data in <b>LAMIS</b> and <b>DHIS2</b>, sustaining <b>99% data integrity</b> and training <b>100+ professionals</b> in data management and digital skills.",
+  "My work bridges <b>technology and impact</b>, from web-based restaurant systems to programme data that drives decisions in <b>health, education and development</b>."],
+ stats:[['6+','Years Experience'],['100+','Professionals Trained'],['99%','Data Integrity'],['20+','Field Sites']],
+ highlights:['Full-Stack Web Developer','USAID/PEPFAR Experience','MEAL & Data Systems','LAMIS & DHIS2 Specialist','NGO & Development Sector'],
+ skills:[
+  ['Web Development',['HTML5','CSS3','JavaScript','PHP','MySQL','React','Node.js','Bootstrap','REST APIs']],
+  ['Data & MEAL Systems',['LAMIS','DHIS2','SQL','Data Quality Assurance','Indicator Tracking','Donor Reporting','Strategic Information','ETL Processes']],
+  ['Capacity Building',['Training Facilitation','Coaching & Mentorship','Community Engagement','Stakeholder Coordination','Report Writing']],
+  ['Tools & Design',['UI/UX Design','Adobe Photoshop','Microsoft Office Suite','Git','Figma']],
+  ['IT Tools',['Microsoft 365','Remote Desktop Tools','Antivirus & Endpoint Security','Backup & Recovery Tools','Command Line / Terminal']],
+  ['Networking',['LAN/WAN Setup','TCP/IP, DHCP & DNS','Router & Wi-Fi Configuration','Network Troubleshooting','Structured Cabling']],
+  ['IT Support & Help Desk',['Hardware & Software Troubleshooting','Software Installation','Enterprise Software Operation','User Account Support','Incident Logging','SysAdmin Operations']],
+  ['Software Development & Engineering',['HTML5 / CSS3 / JavaScript','PHP & Node.js','React','REST APIs','Git & GitHub','System Design']],
+  ['Data & Database Management',['SQL','MySQL','Database Design','Data Cleaning & ETL','Data Quality Assurance','Backup & Restore']],
+  ['Cloud & Infrastructure',['Cloud Hosting Basics','Web Hosting & Domains','Windows / Linux Server Basics','Virtual Machines','Backup & Disaster Recovery']]],
+ exp:[
+  {t:'MEAL Assistant',o:'Achieving Health Nigeria Initiative (AHNi) · USAID/PEPFAR BRIGDE · Yola, Adamawa',d:'Sep 2026 – Present',
+   b:['Conduct data entry and monitoring of programme and client-level records, ensuring accuracy, completeness and consistency across supported health facilities.','Support data upload and reporting to the Electronic Medical Record (EMR) system and the National Data Repository (NDR), in line with reporting timelines and data standards.','Carry out data reconciliation and analysis, cross-checking records across data systems to resolve discrepancies and support accurate programme reporting.'],
+   g:['EMR','NDR','Data Entry','Data Reconciliation','Data Analysis','Programme Reporting']},
+  {t:'M&E Assistant / DEC',o:'Society for Family Health (SFH) · USAID/PEPFAR CARE 2 Project',d:'2025 – 2026',
+   b:['Provide technical oversight for HIV case-management data systems using LAMIS and DHIS2.','Lead end-to-end data management for 20+ field sites, achieving 99% data completeness.','Track referral, linkage, retention and adherence data to assess programme performance.','Strengthen referral-pathway documentation for GBV survivors and vulnerable populations.','Facilitate monthly data review meetings, turning complex data into actionable insights.','Coach staff on data management and ethical case documentation.','Generate monthly, quarterly and donor reports for USAID/PEPFAR.','Support Strategic Information meetings and performance-monitoring activities.'],
+   g:['LAMIS','DHIS2','SQL','Data Quality','Donor Reporting']},
+  {t:'Financial Advisor',o:'Heirs Life Assurance · UBA Bank, Yola',d:'2023 – 2025',
+   b:['Conducted financial consultations for 100+ clients, developing tailored insurance plans.','Maintained deep knowledge of life, health and property insurance products.','Achieved an 85% client retention rate.','Maintained 100% compliance with industry regulations.'],
+   g:['Financial Analysis','Client Relations','Compliance']},
+  {t:'Web Developer & Data Analyst',o:'Freelance & Contract Projects',d:'2021 – 2023',
+   b:['Built custom web applications and websites for clients across various sectors.','Designed and deployed a Web-based Integrated Restaurant System as a final-year project.','Developed data-driven platforms with SQL and PHP for real-time reporting.','Created interactive dashboards using modern frontend technologies.'],
+   g:['PHP','MySQL','JavaScript','React','APIs']},
+  {t:'Classroom Teacher (NYSC)',o:'LCCN No:1 Academy School, Yola',d:'2022 – 2023',
+   b:['Integrated digital tools into the curriculum, enhancing student engagement.','Designed assessments to monitor progress and tailor instructional strategies.','Achieved a 20% improvement in student test scores.'],
+   g:['Teaching','Digital Tools','Student Mentoring']},
+  {t:'Computer Operator / Graphic Designer',o:'Isme Cybercafe, Jalingo',d:'2017 – 2020',
+   b:['Managed data entry and database maintenance under strict data-privacy protocols.','Produced operational reports and error logs.','Delivered graphic design services for clients.'],
+   g:['Data Entry','Graphic Design','Reporting']}],
+ edu:[{t:'B.Sc. Computer Science',o:'Taraba State University, Jalingo',d:'2017 – 2022',n:'Final-year project: Web-based Integrated Restaurant System'}],
+ certs:[['Structured Query Language (SQL)','Society for Family Health','2025'],['Diploma in Ethical Hacking','Alison Online Learning Institute','2022'],['How to Prevent E-waste','UNITAR','2022'],['Microsoft Packages & Graphic Design','360Techworld','2022']],
+ ach:[['fa-chart-line','99% Data Integrity','Led data-quality improvement across 20+ field sites, raising data completeness from 85% to 99%.'],
+  ['fa-graduation-cap','Technology-Enhanced Learning','Introduced technology-driven teaching tools, improving average student test scores by 20%.'],
+  ['fa-code','End-to-End System Development','Designed and deployed a fully functional Web-based Integrated Restaurant System.'],
+  ['fa-users','Capacity Building & Training','Trained 100+ individuals across cohorts in computer literacy, graphic design, programming and data management.'],
+  ['fa-handshake','Compliance & Client Retention','Maintained 100% regulatory compliance while achieving a 95% client retention rate.']],
+ langs:[['English','Professional'],['Hausa','Native'],['Kaka','Native']]
+};
+const pl=s=>s.replace(/<[^>]+>/g,'');                        // strip markup
+const A=s=>pl(s).replace(/[–—]/g,'-').replace(/·/g,'|');      // ASCII-safe for PDF/TXT
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const bd=s=>esc(s).replace(/(\d[\d,]*\+?%?|LAMIS|DHIS2|USAID\/PEPFAR|EMR|NDR)/g,'<b>$1</b>');
+const summary=()=>pl(R.about[0])+' '+pl(R.about[1]);
+
+/* ============ PAGES ============ */
+const hd=(n,t,s)=>`<div class="ph"><small>${String(n).padStart(2,'0')} · Section</small><h2>${t}</h2><p>${s}</p></div>`;
+const PG=[
+ {k:'Profile',i:'fa-user',s:'A snapshot of who I am and the impact I deliver',
+  h:()=>R.about.map(p=>`<p class="txt">${p}</p>`).join('')+
+   `<div class="stats">${R.stats.map(s=>`<div class="card stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div>`+
+   `<div class="sub">Core strengths</div><div class="chips">${R.highlights.map(h=>`<span class="chip"><i class="fas fa-circle-check"></i>${esc(h)}</span>`).join('')}</div>`},
+ {k:'Skills',i:'fa-code',s:'Technical and professional capabilities',
+  h:()=>R.skills.map(c=>`<div class="card"><div class="sub">${esc(c[0])}</div><div class="chips">${c[1].map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div></div>`).join('')},
+ {k:'Experience',i:'fa-briefcase',s:'Professional roles, most recent first',
+  h:()=>R.exp.map(e=>`<div class="card"><div class="eh"><h3>${esc(e.t)}</h3><span class="dt">${esc(e.d)}</span></div><div class="org">${esc(e.o)}</div><ul>${e.b.map(x=>`<li>${bd(x)}</li>`).join('')}</ul><div class="tg">${e.g.map(x=>`<span>${esc(x)}</span>`).join('')}</div></div>`).join('')},
+ {k:'Education',i:'fa-graduation-cap',s:'Academic background and professional certifications',
+  h:()=>`<div class="sub">Education</div>`+R.edu.map(e=>`<div class="card"><div class="eh"><h3>${esc(e.t)}</h3><span class="dt">${esc(e.d)}</span></div><div class="org">${esc(e.o)}</div><ul><li>${esc(e.n)}</li></ul></div>`).join('')+
+   `<div class="sub" style="margin-top:20px">Certifications</div><div class="g2">${R.certs.map(c=>`<div class="card"><h3 style="font-size:14px">${esc(c[0])}</h3><div class="org" style="margin:3px 0 0">${esc(c[1])} · ${c[2]}</div></div>`).join('')}</div>`},
+ {k:'Achievements',i:'fa-trophy',s:'Measurable results and milestones',
+  h:()=>R.ach.map(a=>`<div class="card ach"><i class="fas ${a[0]}"></i><div><h3>${esc(a[1])}</h3><p>${esc(a[2])}</p></div></div>`).join('')},
+ {k:'Contact',i:'fa-paper-plane',s:'Languages, contact details and resume',
+  h:()=>`<div class="g2">`+[['fa-envelope','Email',R.email,'mailto:'+R.email],['fa-location-dot','Location',R.loc,'#'],['fa-brands fa-linkedin-in','LinkedIn',R.li,'https://www.'+R.li],['fa-brands fa-github','GitHub',R.gh,'https://'+R.gh]].map(c=>`<div class="card"><a class="ct" href="${c[3]}" target="_blank" rel="noopener"><i class="${c[0].includes('brands')?c[0]:'fas '+c[0]}"></i><div><small>${c[1]}</small><span>${esc(c[2])}</span></div></a></div>`).join('')+`</div>`+
+   `<div class="sub" style="margin-top:18px">Languages</div><div class="chips">${R.langs.map(l=>`<span class="chip"><i class="fas fa-language"></i>${l[0]} · ${l[1]}</span>`).join('')}</div>`+
+   `<div class="sub" style="margin-top:22px">Download my resume</div><div class="cta"><button onclick="dlResume('pdf')"><i class="fas fa-file-pdf"></i>As PDF</button><button onclick="dlResume('doc')"><i class="fas fa-file-word"></i>As Word</button><button onclick="dlResume('txt')"><i class="fas fa-file-lines"></i>As Text</button></div>`}
+];
+const $=id=>document.getElementById(id);
+$('book').innerHTML=PG.map((p,i)=>`<section class="page glass" data-s="${i?'future':'active'}">${hd(i+1,p.k,p.s)}${p.h()}</section>`).join('');
+$('nav').innerHTML=PG.map((p,i)=>`<button class="nv" data-i="${i}"><i class="fas ${p.i}"></i>${p.k}<em>${String(i+1).padStart(2,'0')}</em></button>`).join('');
+$('dots').innerHTML=PG.map((p,i)=>`<button data-i="${i}" aria-label="${p.k}"></button>`).join('');
+const pages=[...document.querySelectorAll('.page')];let cur=0;
+function go(n){
+ if(n<0||n>=pages.length||n===cur)return;
+ pages.forEach(p=>p.style.zIndex=1);
+ (n>cur?pages[cur]:pages[n]).style.zIndex=10;(n>cur?pages[n]:pages[cur]).style.zIndex=5;
+ pages.forEach((p,i)=>p.dataset.s=i<n?'past':i===n?'active':'future');
+ cur=n;pages[n].scrollTop=0;ui();
+}
+function ui(){
+ document.querySelectorAll('.nv').forEach((b,i)=>b.classList.toggle('on',i===cur));
+ document.querySelectorAll('#dots button').forEach((b,i)=>b.classList.toggle('on',i===cur));
+ $('pgLbl').textContent=`${cur+1} / ${PG.length} · ${PG[cur].k}`;
+ $('prev').disabled=cur===0;$('next').disabled=cur===PG.length-1;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)go(+b.dataset.i)});
+$('prev').onclick=()=>go(cur-1);$('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1);if(e.key==='Escape')$('modal').classList.remove('on')});
+let tx=0,ty=0;const bk=$('book');
+bk.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+bk.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>70&&Math.abs(dy)<50)go(cur+(dx<0?1:-1))});
+$('avatar').onclick=()=>$('modal').classList.add('on');$('modal').onclick=()=>$('modal').classList.remove('on');
+ui();
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ============ RESUME EXPORTS ============ */
+const FN='Naphtali_Sunday_Resume';
+function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+function dlResume(f){try{({pdf:buildPdf,doc:buildDoc,txt:buildTxt})[f]();toast('Resume downloaded ('+f.toUpperCase()+')')}catch(e){console.error(e);toast('Could not create '+f.toUpperCase()+'. Please try again.')}}
+
+/* ---- PDF (vector text via jsPDF: selectable, crisp, auto-paginated) ---- */
+function buildPdf(){
+ if(!window.jspdf)throw new Error('jsPDF not loaded');
+ const d=new window.jspdf.jsPDF({unit:'pt',format:'a4'}),W=595.28,H=841.89,M=42,CW=W-2*M,ac=[26,90,140],dk=[15,23,42],bd2=[60,72,88];
+ let y=0;
+ const need=h=>{if(y+h>H-50){d.addPage();y=M}};
+ const font=(st,sz,c)=>{d.setFont('helvetica',st);d.setFontSize(sz);d.setTextColor(...c)};
+ const sec=t=>{need(48);y+=8;font('bold',10.5,ac);d.text(A(t).toUpperCase(),M,y);d.setDrawColor(ac[0],ac[1],ac[2]);d.setLineWidth(.8);d.line(M,y+5,W-M,y+5);y+=20};
+ const para=(s,sz=9.5,c=bd2)=>{font('normal',sz,c);d.splitTextToSize(A(s),CW).forEach(l=>{need(sz*1.5);d.text(l,M,y);y+=sz*1.45})};
+ const bl=s=>{font('normal',9.5,bd2);const L=d.splitTextToSize(A(s),CW-18);L.forEach((l,i)=>{need(13.5);if(i){font('normal',9.5,bd2)}else{font('bold',9.5,ac);d.text('•',M+5,y);font('normal',9.5,bd2)}d.text(l,M+18,y);y+=13.2});y+=1.5};
+ const entry=(t,dt,o)=>{need(58);font('bold',11,dk);d.text(A(t),M,y);font('normal',9,[100,116,139]);d.text(A(dt),W-M,y,{align:'right'});y+=13;font('bold',9.5,ac);d.splitTextToSize(A(o),CW).forEach(l=>{d.text(l,M,y);y+=12.5});y+=2};
+ // header band
+ d.setFillColor(...ac);d.rect(0,0,W,104,'F');d.setFillColor(42,122,191);d.rect(0,98,W,6,'F');
+ font('bold',25,[255,255,255]);d.text(R.name.toUpperCase(),M,48);
+ font('normal',11.5,[219,234,254]);d.text(A(R.title).replace(/ \| /g,'  |  '),M,67);
+ font('normal',9,[255,255,255]);d.text(A([R.loc,R.email].join('   |   ')),M,86);
+ font('normal',9,[219,234,254]);d.text(A('in/'+R.li.split('/in/')[1]+'   |   '+R.gh),W-M,86,{align:'right'});
+ y=128;
+ // stats
+ const bw=(CW-30)/4;
+ R.stats.forEach((s,i)=>{const x=M+i*(bw+10);d.setFillColor(238,244,251);d.roundedRect(x,y,bw,46,6,6,'F');font('bold',17,ac);d.text(s[0],x+bw/2,y+21,{align:'center'});font('normal',7.5,[100,116,139]);d.text(A(s[1]).toUpperCase(),x+bw/2,y+35,{align:'center'})});
+ y+=62;
+ sec('Professional Summary');para(summary(),9.8);
+ sec('Technical Skills');
+ R.skills.forEach(([c,items])=>{const L=d.splitTextToSize(A(items.join(', ')),CW);need(L.length*13+16);font('bold',9.5,dk);d.text(A(c),M,y);y+=12.5;font('normal',9.5,bd2);L.forEach(l=>{d.text(l,M+10,y);y+=13});y+=4});
+ sec('Professional Experience');
+ R.exp.forEach(e=>{entry(e.t,e.d,e.o);e.b.forEach(bl);y+=5});
+ sec('Education');
+ R.edu.forEach(e=>{entry(e.t,e.d,e.o);bl(e.n)});
+ sec('Certifications');
+ R.certs.forEach(c=>{need(14);font('bold',9.5,dk);d.text(A(c[0]),M,y);font('normal',9.5,bd2);d.text(A(c[1]),M+250,y);d.text(c[2],W-M,y,{align:'right'});y+=14});
+ sec('Key Achievements');
+ R.ach.forEach(a=>{need(26);font('bold',9.8,dk);d.text(A(a[1]),M,y);y+=12.5;font('normal',9.5,bd2);d.splitTextToSize(A(a[2]),CW).forEach(l=>{need(13);d.text(l,M,y);y+=13});y+=4});
+ sec('Languages');
+ para(R.langs.map(l=>l[0]+' ('+l[1]+')').join('     |     '));
+ y+=8;font('italic',9,[100,116,139]);need(14);d.text('References available upon request.',W/2,y,{align:'center'});
+ const n=d.getNumberOfPages();
+ for(let i=1;i<=n;i++){d.setPage(i);font('normal',8,[148,163,184]);d.setDrawColor(226,232,240);d.setLineWidth(.5);d.line(M,H-34,W-M,H-34);d.text(R.name+'  |  Resume',M,H-22);d.text('Page '+i+' of '+n,W-M,H-22,{align:'right'})}
+ d.setProperties({title:R.name+' - Resume',author:R.name,subject:R.title.replace(/·/g,'|')});
+ d.save(FN+'.pdf');
+}
+
+/* ---- WORD (.doc, Word-compatible HTML with real headings, lists and tables) ---- */
+function buildDoc(){
+ const e=esc;
+ const ent=(t,dt,o)=>`<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:9pt"><tr><td><h3>${e(t)}</h3></td><td class="dt" align="right">${e(dt)}</td></tr></table><p class="org">${e(o)}</p>`;
+ const ul=a=>`<ul>${a.map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;
+ let h=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${e(R.name)} - Resume</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+<style>@page{size:A4;margin:1.7cm 1.8cm}body{font-family:Calibri,Arial,sans-serif;font-size:10.5pt;color:#1e293b;line-height:1.35}
+h1{font-size:24pt;color:#fff;margin:0;letter-spacing:1pt}h2{font-size:12pt;color:#1a5a8c;border-bottom:1.5pt solid #1a5a8c;margin:15pt 0 5pt;text-transform:uppercase;padding-bottom:2pt}
+h3{font-size:11pt;color:#0f172a;margin:0}p{margin:2pt 0}ul{margin:2pt 0 4pt 16pt;padding:0}li{margin:1.5pt 0}td{vertical-align:top}
+.org{color:#1a5a8c;font-weight:bold;font-size:10pt}.dt{color:#64748b;font-size:9.5pt;white-space:nowrap}.sk td{padding:2pt 6pt 2pt 0;font-size:10pt}.st td{background:#eef4fb;text-align:center;padding:6pt;border:3pt solid #fff}
+.sn{font-size:16pt;font-weight:bold;color:#1a5a8c}.sl{font-size:7.5pt;color:#64748b;text-transform:uppercase}</style></head><body>
+<table width="100%" cellpadding="14" cellspacing="0"><tr><td bgcolor="#1a5a8c"><h1>${e(R.name.toUpperCase())}</h1><p style="color:#dbeafe;font-size:12pt">${e(R.title)}</p><p style="color:#fff;font-size:9.5pt">${e(R.loc)} &nbsp;|&nbsp; ${e(R.email)} &nbsp;|&nbsp; ${e(R.li)} &nbsp;|&nbsp; ${e(R.gh)}</p></td></tr></table>
+<table class="st" width="100%" cellspacing="0" style="margin-top:8pt"><tr>${R.stats.map(s=>`<td><span class="sn">${s[0]}</span><br><span class="sl">${e(s[1])}</span></td>`).join('')}</tr></table>
+<h2>Professional Summary</h2><p>${e(summary())}</p>
+<h2>Technical Skills</h2><table class="sk" width="100%">${R.skills.map(c=>`<tr><td width="34%"><b>${e(c[0])}</b></td><td>${e(c[1].join(', '))}</td></tr>`).join('')}</table>
+<h2>Professional Experience</h2>${R.exp.map(x=>ent(x.t,x.d,x.o)+ul(x.b)).join('')}
+<h2>Education</h2>${R.edu.map(x=>ent(x.t,x.d,x.o)+ul([x.n])).join('')}
+<h2>Certifications</h2><table class="sk" width="100%">${R.certs.map(c=>`<tr><td width="46%"><b>${e(c[0])}</b></td><td>${e(c[1])}</td><td align="right" class="dt">${c[2]}</td></tr>`).join('')}</table>
+<h2>Key Achievements</h2><ul>${R.ach.map(a=>`<li><b>${e(a[1])}:</b> ${e(a[2])}</li>`).join('')}</ul>
+<h2>Languages</h2><p>${R.langs.map(l=>e(l[0])+' ('+l[1]+')').join(' &nbsp;&nbsp;|&nbsp;&nbsp; ')}</p>
+<p style="text-align:center;color:#64748b;margin-top:14pt"><i>References available upon request.</i></p></body></html>`;
+ save(new Blob(['\ufeff',h],{type:'application/msword;charset=utf-8'}),FN+'.doc');
+}
+
+/* ---- TEXT (clean, aligned, 80-column, ATS-friendly) ---- */
+function buildTxt(){
+ const W=80;
+ const wrap=(s,w,first='',rest='')=>{const out=[];let line=first,empty=true;A(s).split(/\s+/).forEach(x=>{if(!empty&&(line+' '+x).length>w){out.push(line);line=rest+x}else line+=(empty?'':' ')+x;empty=false});out.push(line);return out.join('\n')};
+ const L=[],sec=t=>L.push('','',A(t).toUpperCase(),'-'.repeat(W)),
+  ent=(t,dt,o)=>{const l=A(t),r=A(dt);L.push('',l+' '.repeat(Math.max(2,W-l.length-r.length))+r,wrap(o,W))};
+ L.push(R.name.toUpperCase(),A(R.title),A(R.loc)+' | '+R.email,R.li+' | '+R.gh,'='.repeat(W));
+ sec('Professional Summary');L.push(wrap(summary(),W));
+ sec('Key Metrics');L.push(R.stats.map(s=>A(s[1])+': '+s[0]).join('\n'));
+ sec('Technical Skills');R.skills.forEach(([c,i])=>L.push(c+':',wrap(i.join(', '),W,'  ','  ')));
+ sec('Professional Experience');R.exp.forEach(e=>{ent(e.t,e.d,e.o);e.b.forEach(b=>L.push(wrap(b,W,'  - ','    ')))});
+ sec('Education');R.edu.forEach(e=>{ent(e.t,e.d,e.o);L.push(wrap(e.n,W,'  - ','    '))});
+ sec('Certifications');R.certs.forEach(c=>L.push(wrap(c[0]+' - '+c[1]+' ('+c[2]+')',W,'  - ','    ')));
+ sec('Key Achievements');R.ach.forEach(a=>L.push(wrap(a[1]+': '+a[2],W,'  - ','    ')));
+ sec('Languages');L.push(R.langs.map(l=>l[0]+' ('+l[1]+')').join(', '));
+ L.push('','References available upon request.');
+ save(new Blob(['\ufeff'+L.join('\r\n').replace(/\r?\n/g,'\r\n')],{type:'text/plain;charset=utf-8'}),FN+'.txt');
+}
+</script>
+</body>
+</html>
 
