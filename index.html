@@ -18,11 +18,79 @@ body::after{width:40vw;height:40vw;background:#34d3994d;bottom:-14vw;right:-6vw}
 .app{position:relative;z-index:1;display:grid;grid-template-columns:300px 1fr;gap:20px;height:100dvh;padding:20px;max-width:1440px;margin:auto}
 .glass{background:var(--gl);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--gb);box-shadow:0 10px 40px rgba(15,23,42,.1),inset 0 1px 0 rgba(255,255,255,.85);border-radius:22px}
 /* aside */
-aside{padding:24px 18px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;min-height:0}
-.av{width:104px;height:104px;border-radius:50%;margin:0 auto;position:relative;cursor:pointer;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;font-weight:800;border:4px solid #fff;box-shadow:0 8px 28px rgba(26,90,140,.3);transition:.3s}
-.av:hover{transform:scale(1.05)}
-.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
-.av i{position:absolute;right:2px;bottom:6px;width:18px;height:18px;background:#22c55e;border:3px solid #fff;border-radius:50%}
+aside {
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.av {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  margin: 0 auto;
+  position: relative;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--ac), var(--ac2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  border: 4px solid #fff;
+  box-shadow: 0 8px 28px rgba(26, 90, 140, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  /* Prevent layout shifts & keep perfect circle */
+  flex-shrink: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  -webkit-mask-image: -webkit-radial-gradient(white, black); /* Safari fix */
+  transform: translateZ(0); /* Force GPU rendering for clean edges */
+  backface-visibility: hidden;
+}
+
+.av:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 36px rgba(26, 90, 140, 0.4);
+}
+
+.av img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  display: block;
+}
+
+.av i {
+  position: absolute;
+  right: 2px;
+  bottom: 6px;
+  width: 18px;
+  height: 18px;
+  background: #22c55e;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+/* Optional: responsiveness for smaller desktops */
+@media (max-width: 1200px) {
+  .av {
+    width: 88px;
+    height: 88px;
+    font-size: 28px;
+  }
+}
 .who{text-align:center}
 .who h1{font-size:21px;font-weight:800;letter-spacing:-.02em}.who h1 span{color:var(--ac)}
 .who p{font-size:12.5px;color:var(--tx2);margin-top:4px;line-height:1.5}
