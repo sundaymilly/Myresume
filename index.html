@@ -6,7 +6,6 @@
 <title>Naphtali Sunday · Web Developer, Data Analyst & MEAL Specialist</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<script src="content.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--ac:#1a5a8c;--ac2:#2a7abf;--tx:#0f172a;--tx2:#475569;--mu:#94a3b8;--gl:rgba(255,255,255,.55);--gb:rgba(255,255,255,.75)}
@@ -154,7 +153,7 @@ button.chip{font:inherit;cursor:pointer}.chip.act{background:var(--ac);color:#ff
    <h1>NAPHTALI <span>SUNDAY</span></h1>
    <p>Programmer · Data Analyst<br>MEAL Specialist<br>IT Specialist</p>
    <div class="loc"><i class="fas fa-location-dot"></i> Yola, Adamawa, Nigeria</div>
-   <span class="avail"><i class="fas fa-circle" style="font-size:7px"></i> Open to Work</span><br><span class="avail" id="prevBadge" hidden style="background:#fef3c7;color:#92400e" title="This browser has unpublished admin changes">Previewing admin changes</span>
+   <span class="avail"><i class="fas fa-circle" style="font-size:7px"></i> Open to Work</span>
   </div>
   <div><div class="lbl">Sections</div><nav id="nav"></nav></div>
   <div><div class="lbl">Download my Resume for offline use</div>
@@ -291,36 +290,24 @@ $('avatar').onclick=()=>$('modal').classList.add('on');$('modal').onclick=()=>$(
 ui();
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
 
-/* ============ CONTENT & DOCUMENTS ============
-   Visitors see content.json (+ the /documents folder). Edits are made on admin.html, which exports an update package. */
-const DB={o:null,open(){return this.o||(this.o=new Promise((res,rej)=>{const r=indexedDB.open('portfolioDocs',1);r.onupgradeneeded=()=>r.result.createObjectStore('docs',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
- async tx(m,fn){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('docs',m),q=fn(t.objectStore('docs'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})},
- all(){return this.tx('readonly',s=>s.getAll())}};
-let DOCLIST=[],docCat='All';const urls=new Map();
+/* ============ CONTENT & DOCUMENTS (read from the server database: api/content) ============ */
+let DOCLIST=[],docCat='All';
 const fmtSize=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
 const ext=n=>String(n||'').split('.').pop().toLowerCase();
 const IMG=/^(jpe?g|png|gif|webp|svg|avif)$/;
 const isImg=d=>IMG.test(ext(d.fileName));
 const icon=e=>e==='pdf'?['fa-file-pdf','#dc2626']:/^docx?$/.test(e)?['fa-file-word','#2b579a']:e==='txt'?['fa-file-lines','#64748b']:IMG.test(e)?['fa-file-image','#16a34a']:['fa-file','#64748b'];
-const objUrl=(k,b)=>{if(!urls.has(k))urls.set(k,URL.createObjectURL(b));return urls.get(k)};
 const clean=s=>String(s).replace(/<(?!\/?b>)[^>]*>/gi,'');
 async function loadContent(){
- let base=null,local=null,ld=[];
- base=window.PF_CONTENT||null;
- if(!base){try{const r=await fetch('content.json',{cache:'no-store'});if(r.ok)base=await r.json()}catch(e){}}
- try{local=JSON.parse(localStorage.getItem('pf_content')||'null')}catch(e){}
- try{ld=await DB.all()}catch(e){}
- const c=local||base;
+ let c=null;
+ try{const r=await fetch('api/content',{cache:'no-store'});if(r.ok)c=await r.json()}catch(e){}
  if(c){
   if(Array.isArray(c.about)&&c.about.length)R.about=c.about.map(clean);
   if(Array.isArray(c.stats)&&c.stats.length)R.stats=c.stats;
   if(Array.isArray(c.highlights)&&c.highlights.length)R.highlights=c.highlights;
  }
- let list;
- if(local&&local.docsTouched)list=ld.map(d=>({id:d.id,name:d.name,cat:d.cat,desc:d.desc,fileName:d.fileName,size:d.size,hidden:d.hidden,order:d.order,fileUrl:d.blob?objUrl(d.id,d.blob):d.url,coverUrl:d.cover?objUrl(d.id+'c',d.cover):(d.coverUrl||'')}));
- else list=((base&&base.docs)||[]).map((d,i)=>({id:'s'+i,name:d.name,cat:d.cat,desc:d.desc,fileName:(d.file||'').split('/').pop(),hidden:d.hidden,order:i,fileUrl:d.file,coverUrl:d.cover||''}));
- DOCLIST=list.filter(d=>!d.hidden&&d.fileUrl).sort((a,b)=>a.order-b.order);
- $('prevBadge').hidden=!local;
+ DOCLIST=((c&&c.docs)||[]).filter(d=>!d.hidden).map((d,i)=>({id:'d'+d.id,name:d.name,cat:d.cat,desc:d.desc,fileName:d.fileName,size:d.size,order:i,
+  fileUrl:'files/'+d.id+'?v='+d.v,coverUrl:d.hasCover?'files/'+d.id+'/cover?v='+d.v:''}));
 }
 function renderDocs(){
  const cats=['All',...new Set(DOCLIST.map(d=>d.cat||'Other'))];
