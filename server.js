@@ -102,7 +102,7 @@ async function admin(req, res, u, p, m) {
 /* ---------- server ---------- */
 http.createServer(async (req, res) => {
   try {
-    const u = new URL(req.url, 'http://localhost'), p = decodeURIComponent(u.pathname), m = req.method;
+    const u = new URL(req.url, 'http://localhost'), m = req.method; let p = decodeURIComponent(u.pathname); if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
     res.setHeader('X-Content-Type-Options', 'nosniff');
     if (p === '/api/login' && m === 'POST') {
       const ip = req.socket.remoteAddress, f = fails.get(ip) || { n: 0, t: Date.now() };
@@ -125,7 +125,7 @@ http.createServer(async (req, res) => {
       return res.end(Buffer.from(blob));
     }
     if (m !== 'GET') { res.writeHead(405); return res.end(); }
-    const rel = p === '/' ? '/portfolio.html' : p === '/admin' ? '/admin.html' : p, fp = path.join(PUBLIC, rel);
+    const rel = ['/', '/index.html'].includes(p) ? '/portfolio.html' : p === '/admin' ? '/admin.html' : p, fp = path.join(PUBLIC, rel);
     if (!fp.startsWith(PUBLIC + path.sep) || !fs.existsSync(fp) || !fs.statSync(fp).isFile() || !STATIC[extOf(fp)]) { res.writeHead(404); return res.end('Not found'); }
     res.writeHead(200, { 'Content-Type': STATIC[extOf(fp)], 'Cache-Control': extOf(fp) === 'html' ? 'no-cache' : 'public, max-age=3600' });
     fs.createReadStream(fp).pipe(res);
