@@ -1,0 +1,42 @@
+{
+  "about": [
+    "I'm <b>Naphtali Sunday</b>, a <b>Web Developer</b>, <b>Data Analyst</b> and <b>MEAL Specialist</b> with <b>6+ years</b> of experience building web applications and data systems and leading capacity-building initiatives.",
+    "I have worked extensively on <b>USAID/PEPFAR-funded</b> health programmes across Northeast Nigeria, managing HIV case-management data in <b>LAMIS</b> and <b>DHIS2</b>, sustaining <b>99% data integrity</b> and training <b>100+ professionals</b> in data management and digital skills.",
+    "My work bridges <b>technology and impact</b>, from web-based restaurant systems to programme data that drives decisions in <b>health, education and development</b>.",
+    "hh"
+  ],
+  "stats": [
+    [
+      "6+",
+      "Years Experience"
+    ],
+    [
+      "100+",
+      "Professionals Trained"
+    ],
+    [
+      "99%",
+      "Data Integrity"
+    ],
+    [
+      "20+",
+      "Field Sites"
+    ]
+  ],
+  "highlights": [
+    "Full-Stack Web Developer",
+    "USAID/PEPFAR Experience",
+    "MEAL & Data Systems",
+    "LAMIS & DHIS2 Specialist",
+    "NGO & Development Sector"
+  ],
+  "docs": [
+    {
+      "name": "MY BSC CERT",
+      "cat": "Certificate",
+      "desc": "",
+      "hidden": false,
+      "file": "documents/l1791788106936_MY_BSC_CERT.jpg"
+    }
+  ]
+}
