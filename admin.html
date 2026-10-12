@@ -7,34 +7,29 @@
 <title>Portfolio Admin · Naphtali Sunday</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<script src="content.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root{--ac:#1a5a8c;--ac2:#2a7abf;--tx:#0f172a;--tx2:#475569;--mu:#94a3b8;--ln:#e2e8f0}
 *{margin:0;padding:0;box-sizing:border-box}
+[hidden]{display:none!important}
 body{font-family:'Inter',sans-serif;color:var(--tx);background:linear-gradient(135deg,#dbeafe,#f1f5f9 50%,#cffafe);min-height:100vh;padding:20px}
 .wrap{max-width:1000px;margin:auto}
 .top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:rgba(255,255,255,.75);backdrop-filter:blur(14px);border:1px solid #fff;border-radius:20px;padding:16px 22px;box-shadow:0 10px 30px rgba(15,23,42,.08)}
 .top h1{font-size:20px;font-weight:800}.top h1 small{display:block;font-size:12px;font-weight:500;color:var(--tx2);margin-top:2px}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
 button,.bt{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--ln);background:#fff;border-radius:30px;font:inherit;font-size:13px;font-weight:700;color:var(--tx);cursor:pointer;text-decoration:none;transition:.2s}
-button:hover,.bt:hover{background:#f1f5f9}
+button:hover,.bt:hover{background:#f1f5f9}button:disabled{opacity:.4;cursor:default}
 .pri{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0}.pri:hover{filter:brightness(.93);background:linear-gradient(135deg,var(--ac),var(--ac2))}
 .dng{color:#dc2626}.sm{padding:6px 10px;font-size:12px}
-.tabs{display:flex;gap:6px;margin:18px 0 14px}
-.tabs button{border-radius:12px}.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.tabs{display:flex;gap:6px;margin:18px 0 14px}.tabs button{border-radius:12px}.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .panel{display:none;background:rgba(255,255,255,.8);border:1px solid #fff;border-radius:20px;padding:22px;box-shadow:0 10px 30px rgba(15,23,42,.06)}.panel.on{display:block}
-.note{font-size:12.5px;line-height:1.6;color:#92400e;background:#fef3c7;border:1px solid #fde68a;border-radius:12px;padding:10px 14px;margin-bottom:16px}
-.row{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--ln);border-radius:14px;background:#fff;margin-bottom:10px}
-.row.off{opacity:.55}
-.th{flex:none;width:72px;height:54px;border-radius:10px;background:linear-gradient(135deg,#e0f2fe,#ede9fe);display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden}
-.th img{width:100%;height:100%;object-fit:cover}
+.note{font-size:12.5px;line-height:1.6;color:#166534;background:#dcfce7;border:1px solid #bbf7d0;border-radius:12px;padding:10px 14px;margin-bottom:16px}
+.row{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--ln);border-radius:14px;background:#fff;margin-bottom:10px}.row.off{opacity:.55}
+.th{flex:none;width:72px;height:54px;border-radius:10px;background:linear-gradient(135deg,#e0f2fe,#ede9fe);display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden}.th img{width:100%;height:100%;object-fit:cover}
 .inf{flex:1;min-width:0}.inf b{display:block;font-size:14px}.inf span{font-size:12px;color:var(--tx2)}.inf p{font-size:12px;color:var(--mu);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .act{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 h2{font-size:16px;margin-bottom:4px}.sub{font-size:13px;color:var(--tx2);margin-bottom:14px}
-label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:var(--tx2);margin-bottom:12px}
-label small{font-weight:500;color:var(--mu)}
-input,textarea,select{padding:9px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;font-size:13.5px;width:100%;background:#fff;color:var(--tx)}
+label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:var(--tx2);margin-bottom:12px}label small{font-weight:500;color:var(--mu)}
+input,textarea{padding:9px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;font-size:13.5px;width:100%;background:#fff;color:var(--tx)}
 textarea{min-height:92px;resize:vertical;line-height:1.55}
 .g{display:grid;grid-template-columns:140px 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
 .ab{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}.ab textarea{flex:1}
@@ -43,26 +38,39 @@ textarea{min-height:92px;resize:vertical;line-height:1.55}
 .mbox h3{font-size:18px;margin-bottom:14px}.mact{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
 .empty{text-align:center;color:var(--mu);padding:34px 10px}.empty i{font-size:40px;margin-bottom:8px}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;z-index:99;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;color:#fff;background:#0f172a;transition:.35s;pointer-events:none}.toast.on{opacity:1;transform:translate(-50%,0)}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.lbox{width:min(380px,100%);background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border:1px solid #fff;border-radius:22px;padding:30px;box-shadow:0 20px 50px rgba(15,23,42,.12);text-align:center}
+.lbox i.big{font-size:34px;color:var(--ac);margin-bottom:10px}.lbox h1{font-size:20px;margin-bottom:4px}.lbox p{font-size:13px;color:var(--tx2);margin-bottom:18px}
+.err{color:#dc2626;font-size:12.5px;font-weight:600;min-height:18px;margin:8px 0}
+code{background:#f1f5f9;padding:1px 6px;border-radius:6px;font-size:12px}
 @media(max-width:640px){.row{flex-wrap:wrap}.act{width:100%;justify-content:flex-start}.g{grid-template-columns:90px 1fr auto}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<!-- ============ LOGIN ============ -->
+<div class="login" id="login" hidden>
+ <form class="lbox" id="lform">
+  <i class="fas fa-lock big"></i><h1>Admin sign in</h1><p>Enter your admin password to manage your portfolio.</p>
+  <input type="password" id="pw" placeholder="Password" autocomplete="current-password" required>
+  <div class="err" id="lerr"></div>
+  <button class="pri" style="width:100%;justify-content:center"><i class="fas fa-right-to-bracket"></i> Sign in</button>
+ </form>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="wrap" id="app" hidden>
  <div class="top">
-  <h1><i class="fas fa-user-gear" style="color:var(--ac)"></i> Portfolio Admin<small>Edit your documents and write-ups, then publish the update package.</small></h1>
+  <h1><i class="fas fa-user-gear" style="color:var(--ac)"></i> Portfolio Admin<small>Changes are saved to the database and appear on your site immediately.</small></h1>
   <div class="btns">
-   <a class="bt" href="portfolio.html" target="_blank"><i class="fas fa-eye"></i> Preview site</a>
-   <button class="pri" id="pub"><i class="fas fa-cloud-arrow-up"></i> Publish package</button>
-   <button class="dng" id="reset"><i class="fas fa-rotate-left"></i> Discard local edits</button>
+   <a class="bt" href="./" target="_blank"><i class="fas fa-eye"></i> View site</a>
+   <button id="out"><i class="fas fa-right-from-bracket"></i> Sign out</button>
   </div>
  </div>
-
- <div class="note" id="status" style="margin:14px 0 0"></div>
- <div class="tabs"><button class="on" data-t="docs"><i class="fas fa-folder-open"></i> Documents</button><button data-t="txt"><i class="fas fa-pen-nib"></i> Write-ups</button><button data-t="help"><i class="fas fa-circle-question"></i> How publishing works</button></div>
+ <div class="tabs"><button class="on" data-t="docs"><i class="fas fa-folder-open"></i> Documents</button><button data-t="txt"><i class="fas fa-pen-nib"></i> Write-ups</button><button data-t="help"><i class="fas fa-circle-question"></i> Help</button></div>
 
  <section class="panel on" id="p-docs">
   <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
-   <div><h2>Documents</h2><div class="sub" style="margin:0">Shown to recruiters on the “My Documents” page, in this order.</div></div>
+   <div><h2>Documents</h2><div class="sub" style="margin:0">Shown on the “My Documents” page, in this order. Hidden ones stay private.</div></div>
    <button class="pri" id="add"><i class="fas fa-plus"></i> Add document</button>
   </div>
   <div id="list"></div>
@@ -72,7 +80,7 @@ textarea{min-height:92px;resize:vertical;line-height:1.55}
   <h2>About me (Profile page &amp; resume summary)</h2>
   <div class="sub">One box per paragraph. Use &lt;b&gt;bold&lt;/b&gt; for emphasis. The first two paragraphs also feed the resume summary.</div>
   <div id="abouts"></div><button class="sm" id="addAb"><i class="fas fa-plus"></i> Add paragraph</button>
-  <h2 style="margin-top:26px">Key numbers</h2><div class="sub">Shown as the four stat cards (and in the resume).</div>
+  <h2 style="margin-top:26px">Key numbers</h2><div class="sub">Shown as the stat cards (and in the resume).</div>
   <div id="stats"></div><button class="sm" id="addSt"><i class="fas fa-plus"></i> Add number</button>
   <h2 style="margin-top:26px">Core strengths</h2><div class="sub">One per line.</div>
   <textarea id="hl" style="min-height:120px"></textarea>
@@ -80,15 +88,13 @@ textarea{min-height:92px;resize:vertical;line-height:1.55}
  </section>
 
  <section class="panel" id="p-help">
-  <h2>How publishing works</h2>
-  <div class="note"><b>Important:</b> your edits are saved <u>in this browser</u> and show on your portfolio when you open it in the same browser (a yellow “Previewing admin changes” tag appears). Recruiters only see what is on your web host.</div>
-  <ol style="font-size:14px;line-height:2;padding-left:20px;color:var(--tx2)">
-   <li>Make your changes here (documents and write-ups).</li>
-   <li>Click <b>Publish package</b>. A file called <code>portfolio-update.zip</code> downloads.</li>
-   <li>Unzip it and upload <b><code>content.js</code></b> (plus <code>content.json</code>) and the <b><code>documents</code></b> folder to the same folder as <code>portfolio.html</code> on your host (replace the old ones).</li>
-   <li>Refresh your live site (Ctrl+F5). Recruiters now see the new documents and text.</li>
-  </ol>
-  <div class="note" style="margin-top:14px">Keep <code>admin.html</code> off your public site (or protect it with your host’s password feature). It has no login of its own, but it cannot change what recruiters see without the upload step above.</div>
+  <h2>How it works</h2>
+  <div class="note">Everything you add or edit here is stored in the site's database (<code>data/portfolio.db</code>) and shown to visitors straight away. There is no publishing step.</div>
+  <ul style="font-size:14px;line-height:2;padding-left:20px;color:var(--tx2)">
+   <li><b>Allowed files:</b> PDF, Word (.doc/.docx), text and images (PNG, JPG, GIF, WebP), up to 15 MB each.</li>
+   <li><b>Backup:</b> copy <code>data/portfolio.db</code>. It holds all text and documents.</li>
+   <li><b>Password:</b> set with the <code>ADMIN_PASSWORD</code> setting on your host. Sessions last 12 hours.</li>
+  </ul>
  </section>
 </div>
 
@@ -106,84 +112,97 @@ textarea{min-height:92px;resize:vertical;line-height:1.55}
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2400)};
-const DB={o:null,open(){return this.o||(this.o=new Promise((res,rej)=>{const r=indexedDB.open('portfolioDocs',1);r.onupgradeneeded=()=>r.result.createObjectStore('docs',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
- async tx(m,fn){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('docs',m),q=fn(t.objectStore('docs'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})},
- all(){return this.tx('readonly',s=>s.getAll())},put(d){return this.tx('readwrite',s=>s.put(d))},del(id){return this.tx('readwrite',s=>s.delete(id))},clear(){return this.tx('readwrite',s=>s.clear())}};
+const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)};
 const DEF={
  about:["I'm <b>Naphtali Sunday</b>, a <b>Web Developer</b>, <b>Data Analyst</b> and <b>MEAL Specialist</b> with <b>6+ years</b> of experience building web applications and data systems and leading capacity-building initiatives.",
   "I have worked extensively on <b>USAID/PEPFAR-funded</b> health programmes across Northeast Nigeria, managing HIV case-management data in <b>LAMIS</b> and <b>DHIS2</b>, sustaining <b>99% data integrity</b> and training <b>100+ professionals</b> in data management and digital skills.",
   "My work bridges <b>technology and impact</b>, from web-based restaurant systems to programme data that drives decisions in <b>health, education and development</b>."],
  stats:[['6+','Years Experience'],['100+','Professionals Trained'],['99%','Data Integrity'],['20+','Field Sites']],
  highlights:['Full-Stack Web Developer','USAID/PEPFAR Experience','MEAL & Data Systems','LAMIS & DHIS2 Specialist','NGO & Development Sector']};
-let C,DOCS=[],editId=null,BASE=null;const urls=new Map();
-const getLocal=()=>{try{return JSON.parse(localStorage.getItem('pf_content')||'null')}catch(e){return null}};
-const setLocal=()=>localStorage.setItem('pf_content',JSON.stringify(C));
-const objUrl=(k,b)=>{if(!urls.has(k))urls.set(k,URL.createObjectURL(b));return urls.get(k)};
-const ext=n=>String(n||'').split('.').pop().toLowerCase(),IMG=/^(jpe?g|png|gif|webp|svg|avif)$/;
+let TOKEN=sessionStorage.getItem('pf_tok')||'',C=null,DOCS=[],editId=null;
+const JH={'Content-Type':'application/json'};
+const ext=n=>String(n||'').split('.').pop().toLowerCase(),IMG=/^(jpe?g|png|gif|webp)$/;
 const icon=e=>e==='pdf'?['fa-file-pdf','#dc2626']:/^docx?$/.test(e)?['fa-file-word','#2b579a']:e==='txt'?['fa-file-lines','#64748b']:IMG.test(e)?['fa-file-image','#16a34a']:['fa-file','#64748b'];
-const sorted=()=>[...DOCS].sort((a,b)=>a.order-b.order);
 
-async function init(){
- BASE=window.PF_CONTENT||null;
- if(!BASE){try{const r=await fetch('content.json',{cache:'no-store'});if(r.ok)BASE=await r.json()}catch(e){}}
- C=getLocal()||{about:(BASE&&BASE.about)||DEF.about,stats:(BASE&&BASE.stats)||DEF.stats,highlights:(BASE&&BASE.highlights)||DEF.highlights,docsTouched:false};
- try{DOCS=await DB.all()}catch(e){toast('Browser storage unavailable: edits cannot be saved')}
- if(!DOCS.length&&!C.docsTouched&&BASE&&BASE.docs){          // bring in already-published documents so they can be edited
-  for(const [i,d] of BASE.docs.entries()){const e={id:'b'+i,name:d.name,cat:d.cat,desc:d.desc||'',url:d.file,coverUrl:d.cover||'',fileName:String(d.file||'').split('/').pop(),size:0,hidden:!!d.hidden,order:i,added:Date.now()+i};await DB.put(e);DOCS.push(e)}
-  C.docsTouched=true;setLocal();
- }
- renderDocs();renderTxt();status();
+async function api(path,opt={}){
+ const h={...(opt.headers||{})};if(TOKEN)h.Authorization='Bearer '+TOKEN;
+ const r=await fetch(path,{...opt,headers:h});
+ if(r.status===401&&path!=='api/login'){showLogin();throw new Error('Please sign in')}
+ let d=null;try{d=await r.json()}catch(e){}
+ if(!r.ok)throw new Error((d&&d.error)||'Request failed ('+r.status+')');
+ return d;
+}
+function showLogin(){TOKEN='';sessionStorage.removeItem('pf_tok');$('app').hidden=true;$('login').hidden=false;$('pw').focus()}
+$('lform').onsubmit=async e=>{e.preventDefault();$('lerr').textContent='';
+ try{const r=await api('api/login',{method:'POST',headers:JH,body:JSON.stringify({password:$('pw').value})});TOKEN=r.token;sessionStorage.setItem('pf_tok',TOKEN);$('pw').value='';await start()}
+ catch(err){$('lerr').textContent=err.message}};
+$('out').onclick=showLogin;
+
+async function start(){
+ try{
+  const [docs,c]=await Promise.all([api('api/admin/docs'),api('api/content')]);
+  DOCS=docs;C={about:c.about||DEF.about,stats:c.stats||DEF.stats,highlights:c.highlights||DEF.highlights};
+  $('login').hidden=true;$('app').hidden=false;renderDocs();renderTxt();
+ }catch(e){if(!TOKEN)showLogin();else toast(e.message)}
 }
 
 /* ---------- documents ---------- */
 function thumb(d){
- const e=ext(d.fileName),cv=d.cover?objUrl(d.id+'c',d.cover):d.coverUrl||(IMG.test(e)?(d.blob?objUrl(d.id,d.blob):d.url):'');
- return cv?`<img src="${esc(cv)}" alt="">`:`<i class="fas ${icon(e)[0]}" style="color:${icon(e)[1]}"></i>`;
+ const e=ext(d.fileName),q='?t='+TOKEN+'&v='+d.v;
+ if(d.hasCover)return `<img src="files/${d.id}/cover${q}" alt="">`;
+ if(IMG.test(e))return `<img src="files/${d.id}${q}" alt="">`;
+ return `<i class="fas ${icon(e)[0]}" style="color:${icon(e)[1]}"></i>`;
 }
 function renderDocs(){
- const l=sorted();
- $('list').innerHTML=l.length?l.map((d,i)=>`<div class="row${d.hidden?' off':''}"><div class="th">${thumb(d)}</div><div class="inf"><b>${esc(d.name)}</b><span>${esc(d.cat||'Other')} · ${esc(d.fileName)}${d.hidden?' · <i>hidden</i>':''}</span>${d.desc?`<p>${esc(d.desc)}</p>`:''}</div>
-  <div class="act"><button class="sm" data-a="up" data-id="${d.id}" ${i?'':'disabled'} title="Move up"><i class="fas fa-arrow-up"></i></button><button class="sm" data-a="dn" data-id="${d.id}" ${i<l.length-1?'':'disabled'} title="Move down"><i class="fas fa-arrow-down"></i></button><button class="sm" data-a="vis" data-id="${d.id}"><i class="fas ${d.hidden?'fa-eye':'fa-eye-slash'}"></i> ${d.hidden?'Show':'Hide'}</button><button class="sm" data-a="ed" data-id="${d.id}"><i class="fas fa-pen"></i> Edit</button><button class="sm dng" data-a="rm" data-id="${d.id}"><i class="fas fa-trash"></i></button></div></div>`).join('')
+ $('list').innerHTML=DOCS.length?DOCS.map((d,i)=>`<div class="row${d.hidden?' off':''}"><div class="th">${thumb(d)}</div><div class="inf"><b>${esc(d.name)}</b><span>${esc(d.cat||'Other')} · ${d.fileName?esc(d.fileName):'<i>no file yet</i>'}${d.hidden?' · <i>hidden</i>':''}</span>${d.desc?`<p>${esc(d.desc)}</p>`:''}</div>
+  <div class="act"><button class="sm" data-a="up" data-id="${d.id}" ${i?'':'disabled'} title="Move up"><i class="fas fa-arrow-up"></i></button><button class="sm" data-a="dn" data-id="${d.id}" ${i<DOCS.length-1?'':'disabled'} title="Move down"><i class="fas fa-arrow-down"></i></button><button class="sm" data-a="vis" data-id="${d.id}"><i class="fas ${d.hidden?'fa-eye':'fa-eye-slash'}"></i> ${d.hidden?'Show':'Hide'}</button><button class="sm" data-a="ed" data-id="${d.id}"><i class="fas fa-pen"></i> Edit</button><button class="sm dng" data-a="rm" data-id="${d.id}"><i class="fas fa-trash"></i></button></div></div>`).join('')
   :`<div class="empty"><i class="fas fa-folder-open"></i><p>No documents yet. Click “Add document”.</p></div>`;
 }
-const touch=()=>{C.docsTouched=true;setLocal();status()};
-function status(){$('status').innerHTML=(C&&(C.docsTouched||getLocal()))?'<b>Unpublished changes.</b> Your edits are saved in <u>this browser only</u>, so visitors on your live site cannot see them yet. Click <b>Publish package</b>, then upload <code>content.js</code> and the <code>documents</code> folder to your host.':'No local edits yet. What you see here matches your published site.'}
+const reload=async()=>{DOCS=await api('api/admin/docs');renderDocs()};
 async function move(id,dir){
- const l=sorted();l.forEach((x,i)=>x.order=i);const i=l.findIndex(x=>x.id===id),j=i+dir;if(j<0||j>=l.length)return;
- [l[i].order,l[j].order]=[l[j].order,l[i].order];await DB.put(l[i]);await DB.put(l[j]);touch();renderDocs();
+ const i=DOCS.findIndex(x=>x.id===id),j=i+dir;if(j<0||j>=DOCS.length)return;
+ [DOCS[i],DOCS[j]]=[DOCS[j],DOCS[i]];renderDocs();
+ try{await api('api/admin/reorder',{method:'POST',headers:JH,body:JSON.stringify({ids:DOCS.map(d=>d.id)})})}catch(e){toast(e.message);reload()}
 }
 $('list').onclick=async e=>{
- const b=e.target.closest('[data-a]');if(!b)return;const d=DOCS.find(x=>x.id===b.dataset.id),a=b.dataset.a;if(!d)return;
- if(a==='up')move(d.id,-1);if(a==='dn')move(d.id,1);
- if(a==='vis'){d.hidden=!d.hidden;await DB.put(d);touch();renderDocs()}
- if(a==='ed')openForm(d);
- if(a==='rm'&&confirm('Delete "'+d.name+'"?')){await DB.del(d.id);DOCS=DOCS.filter(x=>x.id!==d.id);touch();renderDocs();toast('Document deleted')}
+ const b=e.target.closest('[data-a]');if(!b)return;const id=+b.dataset.id,d=DOCS.find(x=>x.id===id),a=b.dataset.a;if(!d)return;
+ try{
+  if(a==='up')move(id,-1);if(a==='dn')move(id,1);
+  if(a==='vis'){await api('api/admin/docs/'+id,{method:'PUT',headers:JH,body:JSON.stringify({hidden:!d.hidden})});await reload()}
+  if(a==='ed')openForm(d);
+  if(a==='rm'&&confirm('Delete "'+d.name+'" permanently?')){await api('api/admin/docs/'+id,{method:'DELETE'});await reload();toast('Document deleted')}
+ }catch(err){toast(err.message)}
 };
 function openForm(d){
  editId=d?d.id:null;$('mT').textContent=d?'Edit document':'Add a document';
  $('fName').value=d?d.name:'';$('fCat').value=d?d.cat:'';$('fDesc').value=d?d.desc||'':'';$('fFile').value='';$('fCover').value='';
- $('fFileH').textContent=d?'Leave empty to keep the current file ('+d.fileName+')':'PDF, Word, image or text · max 15 MB';
+ $('fFileH').textContent=d&&d.fileName?'Leave empty to keep the current file ('+d.fileName+')':'PDF, Word, image or text · max 15 MB';
  $('m').classList.add('on');
 }
 $('add').onclick=()=>openForm(null);$('fCancel').onclick=()=>$('m').classList.remove('on');
 $('fFile').onchange=e=>{const f=e.target.files[0];if(f&&!$('fName').value.trim())$('fName').value=f.name.replace(/\.[^.]+$/,'')};
 $('fSave').onclick=async()=>{
- const f=$('fFile').files[0],cv=$('fCover').files[0];let d=editId?DOCS.find(x=>x.id===editId):null;
- if(!d&&!f)return toast('Please choose a document file');
+ const f=$('fFile').files[0],cv=$('fCover').files[0],cur=editId&&DOCS.find(x=>x.id===editId);
+ if(!f&&!(cur&&cur.fileName))return toast('Please choose a document file');
  if((f&&f.size>15*1048576)||(cv&&cv.size>15*1048576))return toast('File too large (max 15 MB)');
- const isNew=!d;if(isNew)d={id:'l'+Date.now(),order:DOCS.length,hidden:false,added:Date.now()};
- d.name=$('fName').value.trim()||(f?f.name.replace(/\.[^.]+$/,''):d.name);d.cat=$('fCat').value.trim()||'Other';d.desc=$('fDesc').value.trim();
- if(f){d.blob=f;d.fileName=f.name;d.size=f.size;delete d.url;urls.delete(d.id)}
- if(cv){d.cover=cv;delete d.coverUrl;urls.delete(d.id+'c')}
- try{await DB.put(d);if(isNew)DOCS.push(d);touch();renderDocs();$('m').classList.remove('on');toast((isNew?'Document added':'Changes saved')+' on this browser. Click Publish package so visitors see it')}
- catch(err){console.error(err);toast('Could not save (browser storage unavailable)')}
+ const meta=JSON.stringify({name:$('fName').value.trim()||(f?f.name.replace(/\.[^.]+$/,''):''),cat:$('fCat').value.trim(),desc:$('fDesc').value.trim()});
+ $('fSave').disabled=true;let id=editId,created=false;
+ try{
+  if(!id){const r=await api('api/admin/docs',{method:'POST',headers:JH,body:meta});id=r.id;created=true}
+  else await api('api/admin/docs/'+id,{method:'PUT',headers:JH,body:meta});
+  const up=(part,file)=>api(`api/admin/docs/${id}/${part}?name=${encodeURIComponent(file.name)}`,{method:'PUT',headers:{'Content-Type':'application/octet-stream'},body:file});
+  if(f)await up('file',f);if(cv)await up('cover',cv);
+  $('m').classList.remove('on');await reload();toast(created?'Document added and live on your site':'Changes saved')
+ }catch(err){
+  if(created&&id)try{await api('api/admin/docs/'+id,{method:'DELETE'})}catch(e){}
+  toast(err.message);
+ }finally{$('fSave').disabled=false}
 };
 
 /* ---------- write-ups ---------- */
 function renderTxt(){
- $('abouts').innerHTML=C.about.map((p,i)=>`<div class="ab"><textarea data-i="${i}">${esc(p)}</textarea><button class="sm dng" data-rm="${i}" title="Remove"><i class="fas fa-trash"></i></button></div>`).join('');
- $('stats').innerHTML=C.stats.map((s,i)=>`<div class="g"><input data-sv="${i}" value="${esc(s[0])}" placeholder="99%"><input data-sl="${i}" value="${esc(s[1])}" placeholder="Label"><button class="sm dng" data-rs="${i}"><i class="fas fa-trash"></i></button></div>`).join('');
+ $('abouts').innerHTML=C.about.map((p,i)=>`<div class="ab"><textarea>${esc(p)}</textarea><button class="sm dng" data-rm="${i}" title="Remove"><i class="fas fa-trash"></i></button></div>`).join('');
+ $('stats').innerHTML=C.stats.map((s,i)=>`<div class="g"><input value="${esc(s[0])}" placeholder="99%"><input value="${esc(s[1])}" placeholder="Label"><button class="sm dng" data-rs="${i}"><i class="fas fa-trash"></i></button></div>`).join('');
  $('hl').value=C.highlights.join('\n');
 }
 function readTxt(){
@@ -195,29 +214,11 @@ $('addAb').onclick=()=>{readTxt();C.about.push('');renderTxt()};
 $('addSt').onclick=()=>{readTxt();C.stats.push(['','']);renderTxt()};
 $('abouts').onclick=e=>{const b=e.target.closest('[data-rm]');if(b){readTxt();C.about.splice(+b.dataset.rm,1);renderTxt()}};
 $('stats').onclick=e=>{const b=e.target.closest('[data-rs]');if(b){readTxt();C.stats.splice(+b.dataset.rs,1);renderTxt()}};
-$('saveTxt').onclick=()=>{readTxt();if(!C.about.length)return toast('Add at least one About paragraph');setLocal();status();toast('Saved on this browser. Click Publish package so visitors see it')};
+$('saveTxt').onclick=async()=>{readTxt();
+ try{await api('api/admin/content',{method:'PUT',headers:JH,body:JSON.stringify(C)});toast('Saved. Your site is updated')}catch(e){toast(e.message)}};
 
-/* ---------- tabs, publish, reset ---------- */
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t))});
-$('reset').onclick=async()=>{if(!confirm('Discard ALL local edits and go back to the published version?'))return;try{await DB.clear()}catch(e){}localStorage.removeItem('pf_content');DOCS=[];await init();toast('Local edits discarded')};
-$('pub').onclick=async()=>{
- if(!window.JSZip)return toast('Zip library did not load. Check your internet connection');
- readTxt();setLocal();
- const z=new JSZip(),out=[],slug=(n,id)=>id+'_'+String(n).replace(/[^\w.-]+/g,'_');
- for(const d of sorted()){
-  const o={name:d.name,cat:d.cat,desc:d.desc||'',hidden:!!d.hidden};
-  if(d.blob){o.file='documents/'+slug(d.fileName,d.id);z.file(o.file,d.blob)}else o.file=d.url;
-  if(d.cover){o.cover='documents/covers/'+slug(d.cover.name||'cover.png',d.id);z.file(o.cover,d.cover)}else if(d.coverUrl)o.cover=d.coverUrl;
-  out.push(o);
- }
- const data=JSON.stringify({about:C.about,stats:C.stats,highlights:C.highlights,docs:out},null,2);
- z.file('content.js','window.PF_CONTENT='+data+';');z.file('content.json',data);
- z.file('README.txt','PORTFOLIO UPDATE\n\n1. Upload content.js (and content.json) next to portfolio.html on your host, replacing the old files.\n2. Upload the "documents" folder next to it (merge/replace).\n3. Refresh your live site (Ctrl+F5).\n');
- const blob=await z.generateAsync({type:'blob'}),a=document.createElement('a');
- a.href=URL.createObjectURL(blob);a.download='portfolio-update.zip';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
- toast('Package downloaded. Upload it to your host');
-};
-init();
+TOKEN?start():showLogin();
 </script>
 </body>
 </html>
