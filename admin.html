@@ -7,6 +7,7 @@
 <title>Portfolio Admin · Naphtali Sunday</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="content.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root{--ac:#1a5a8c;--ac2:#2a7abf;--tx:#0f172a;--tx2:#475569;--mu:#94a3b8;--ln:#e2e8f0}
@@ -56,6 +57,7 @@ textarea{min-height:92px;resize:vertical;line-height:1.55}
   </div>
  </div>
 
+ <div class="note" id="status" style="margin:14px 0 0"></div>
  <div class="tabs"><button class="on" data-t="docs"><i class="fas fa-folder-open"></i> Documents</button><button data-t="txt"><i class="fas fa-pen-nib"></i> Write-ups</button><button data-t="help"><i class="fas fa-circle-question"></i> How publishing works</button></div>
 
  <section class="panel on" id="p-docs">
@@ -83,8 +85,8 @@ textarea{min-height:92px;resize:vertical;line-height:1.55}
   <ol style="font-size:14px;line-height:2;padding-left:20px;color:var(--tx2)">
    <li>Make your changes here (documents and write-ups).</li>
    <li>Click <b>Publish package</b>. A file called <code>portfolio-update.zip</code> downloads.</li>
-   <li>Unzip it and upload <b><code>content.json</code></b> and the <b><code>documents</code></b> folder to the same folder as <code>portfolio.html</code> on your host (replace the old ones).</li>
-   <li>Refresh your live site. Recruiters now see the new documents and text.</li>
+   <li>Unzip it and upload <b><code>content.js</code></b> (plus <code>content.json</code>) and the <b><code>documents</code></b> folder to the same folder as <code>portfolio.html</code> on your host (replace the old ones).</li>
+   <li>Refresh your live site (Ctrl+F5). Recruiters now see the new documents and text.</li>
   </ol>
   <div class="note" style="margin-top:14px">Keep <code>admin.html</code> off your public site (or protect it with your host’s password feature). It has no login of its own, but it cannot change what recruiters see without the upload step above.</div>
  </section>
@@ -123,14 +125,15 @@ const icon=e=>e==='pdf'?['fa-file-pdf','#dc2626']:/^docx?$/.test(e)?['fa-file-wo
 const sorted=()=>[...DOCS].sort((a,b)=>a.order-b.order);
 
 async function init(){
- try{const r=await fetch('content.json',{cache:'no-store'});if(r.ok)BASE=await r.json()}catch(e){}
+ BASE=window.PF_CONTENT||null;
+ if(!BASE){try{const r=await fetch('content.json',{cache:'no-store'});if(r.ok)BASE=await r.json()}catch(e){}}
  C=getLocal()||{about:(BASE&&BASE.about)||DEF.about,stats:(BASE&&BASE.stats)||DEF.stats,highlights:(BASE&&BASE.highlights)||DEF.highlights,docsTouched:false};
  try{DOCS=await DB.all()}catch(e){toast('Browser storage unavailable: edits cannot be saved')}
  if(!DOCS.length&&!C.docsTouched&&BASE&&BASE.docs){          // bring in already-published documents so they can be edited
   for(const [i,d] of BASE.docs.entries()){const e={id:'b'+i,name:d.name,cat:d.cat,desc:d.desc||'',url:d.file,coverUrl:d.cover||'',fileName:String(d.file||'').split('/').pop(),size:0,hidden:!!d.hidden,order:i,added:Date.now()+i};await DB.put(e);DOCS.push(e)}
   C.docsTouched=true;setLocal();
  }
- renderDocs();renderTxt();
+ renderDocs();renderTxt();status();
 }
 
 /* ---------- documents ---------- */
@@ -144,7 +147,8 @@ function renderDocs(){
   <div class="act"><button class="sm" data-a="up" data-id="${d.id}" ${i?'':'disabled'} title="Move up"><i class="fas fa-arrow-up"></i></button><button class="sm" data-a="dn" data-id="${d.id}" ${i<l.length-1?'':'disabled'} title="Move down"><i class="fas fa-arrow-down"></i></button><button class="sm" data-a="vis" data-id="${d.id}"><i class="fas ${d.hidden?'fa-eye':'fa-eye-slash'}"></i> ${d.hidden?'Show':'Hide'}</button><button class="sm" data-a="ed" data-id="${d.id}"><i class="fas fa-pen"></i> Edit</button><button class="sm dng" data-a="rm" data-id="${d.id}"><i class="fas fa-trash"></i></button></div></div>`).join('')
   :`<div class="empty"><i class="fas fa-folder-open"></i><p>No documents yet. Click “Add document”.</p></div>`;
 }
-const touch=()=>{C.docsTouched=true;setLocal()};
+const touch=()=>{C.docsTouched=true;setLocal();status()};
+function status(){$('status').innerHTML=(C&&(C.docsTouched||getLocal()))?'<b>Unpublished changes.</b> Your edits are saved in <u>this browser only</u>, so visitors on your live site cannot see them yet. Click <b>Publish package</b>, then upload <code>content.js</code> and the <code>documents</code> folder to your host.':'No local edits yet. What you see here matches your published site.'}
 async function move(id,dir){
  const l=sorted();l.forEach((x,i)=>x.order=i);const i=l.findIndex(x=>x.id===id),j=i+dir;if(j<0||j>=l.length)return;
  [l[i].order,l[j].order]=[l[j].order,l[i].order];await DB.put(l[i]);await DB.put(l[j]);touch();renderDocs();
@@ -172,7 +176,7 @@ $('fSave').onclick=async()=>{
  d.name=$('fName').value.trim()||(f?f.name.replace(/\.[^.]+$/,''):d.name);d.cat=$('fCat').value.trim()||'Other';d.desc=$('fDesc').value.trim();
  if(f){d.blob=f;d.fileName=f.name;d.size=f.size;delete d.url;urls.delete(d.id)}
  if(cv){d.cover=cv;delete d.coverUrl;urls.delete(d.id+'c')}
- try{await DB.put(d);if(isNew)DOCS.push(d);touch();renderDocs();$('m').classList.remove('on');toast(isNew?'Document added':'Changes saved')}
+ try{await DB.put(d);if(isNew)DOCS.push(d);touch();renderDocs();$('m').classList.remove('on');toast((isNew?'Document added':'Changes saved')+' on this browser. Click Publish package so visitors see it')}
  catch(err){console.error(err);toast('Could not save (browser storage unavailable)')}
 };
 
@@ -191,7 +195,7 @@ $('addAb').onclick=()=>{readTxt();C.about.push('');renderTxt()};
 $('addSt').onclick=()=>{readTxt();C.stats.push(['','']);renderTxt()};
 $('abouts').onclick=e=>{const b=e.target.closest('[data-rm]');if(b){readTxt();C.about.splice(+b.dataset.rm,1);renderTxt()}};
 $('stats').onclick=e=>{const b=e.target.closest('[data-rs]');if(b){readTxt();C.stats.splice(+b.dataset.rs,1);renderTxt()}};
-$('saveTxt').onclick=()=>{readTxt();if(!C.about.length)return toast('Add at least one About paragraph');setLocal();toast('Write-ups saved. Open the site to preview')};
+$('saveTxt').onclick=()=>{readTxt();if(!C.about.length)return toast('Add at least one About paragraph');setLocal();status();toast('Saved on this browser. Click Publish package so visitors see it')};
 
 /* ---------- tabs, publish, reset ---------- */
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t))});
@@ -206,8 +210,9 @@ $('pub').onclick=async()=>{
   if(d.cover){o.cover='documents/covers/'+slug(d.cover.name||'cover.png',d.id);z.file(o.cover,d.cover)}else if(d.coverUrl)o.cover=d.coverUrl;
   out.push(o);
  }
- z.file('content.json',JSON.stringify({about:C.about,stats:C.stats,highlights:C.highlights,docs:out},null,2));
- z.file('README.txt','PORTFOLIO UPDATE\n\n1. Upload content.json next to portfolio.html on your host (replace the old file).\n2. Upload the "documents" folder next to it (merge/replace).\n3. Refresh your live site.\n');
+ const data=JSON.stringify({about:C.about,stats:C.stats,highlights:C.highlights,docs:out},null,2);
+ z.file('content.js','window.PF_CONTENT='+data+';');z.file('content.json',data);
+ z.file('README.txt','PORTFOLIO UPDATE\n\n1. Upload content.js (and content.json) next to portfolio.html on your host, replacing the old files.\n2. Upload the "documents" folder next to it (merge/replace).\n3. Refresh your live site (Ctrl+F5).\n');
  const blob=await z.generateAsync({type:'blob'}),a=document.createElement('a');
  a.href=URL.createObjectURL(blob);a.download='portfolio-update.zip';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
  toast('Package downloaded. Upload it to your host');
