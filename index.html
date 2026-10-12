@@ -10,6 +10,7 @@
 <style>
 :root{--ac:#1a5a8c;--ac2:#2a7abf;--tx:#0f172a;--tx2:#475569;--mu:#94a3b8;--gl:rgba(255,255,255,.55);--gb:rgba(255,255,255,.75)}
 *{margin:0;padding:0;box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{height:100%}
 body{font-family:'Inter',-apple-system,sans-serif;color:var(--tx);background:#fff;overflow:hidden;position:relative}
 body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none}
@@ -18,79 +19,12 @@ body::after{width:40vw;height:40vw;background:#34d3994d;bottom:-14vw;right:-6vw}
 .app{position:relative;z-index:1;display:grid;grid-template-columns:300px 1fr;gap:20px;height:100dvh;padding:20px;max-width:1440px;margin:auto}
 .glass{background:var(--gl);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--gb);box-shadow:0 10px 40px rgba(15,23,42,.1),inset 0 1px 0 rgba(255,255,255,.85);border-radius:22px}
 /* aside */
-aside {
-  padding: 24px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
-  min-height: 0;
-}
-
-.av {
-  width: 104px;
-  height: 104px;
-  border-radius: 50%;
-  margin: 0 auto;
-  position: relative;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--ac), var(--ac2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 34px;
-  font-weight: 800;
-  border: 4px solid #fff;
-  box-shadow: 0 8px 28px rgba(26, 90, 140, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
-  /* Prevent layout shifts & keep perfect circle */
-  flex-shrink: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-  -webkit-mask-image: -webkit-radial-gradient(white, black); /* Safari fix */
-  transform: translateZ(0); /* Force GPU rendering for clean edges */
-  backface-visibility: hidden;
-}
-
-.av:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 36px rgba(26, 90, 140, 0.4);
-}
-
-.av img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 50%;
-  display: block;
-}
-
-.av i {
-  position: absolute;
-  right: 2px;
-  bottom: 6px;
-  width: 18px;
-  height: 18px;
-  background: #22c55e;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  box-sizing: border-box;
-  z-index: 2;
-}
-
-/* Optional: responsiveness for smaller desktops */
-@media (max-width: 1200px) {
-  .av {
-    width: 88px;
-    height: 88px;
-    font-size: 28px;
-  }
-}
+aside{padding:24px 18px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;min-height:0}
+.av{width:104px;height:104px;border-radius:50%;margin:0 auto;position:relative;cursor:pointer;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;font-weight:800;border:4px solid #fff;box-shadow:0 8px 28px rgba(26,90,140,.3);transition:transform .3s ease,box-shadow .3s ease;flex-shrink:0;overflow:hidden;-webkit-mask-image:-webkit-radial-gradient(white,black);transform:translateZ(0);backface-visibility:hidden}
+.av:hover{transform:scale(1.05);box-shadow:0 12px 36px rgba(26,90,140,.4)}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%;display:block}
+.av i{position:absolute;right:2px;bottom:6px;width:18px;height:18px;background:#22c55e;border:3px solid #fff;border-radius:50%;z-index:2}
+@media(max-width:1200px){.av{width:88px;height:88px;font-size:28px}}
 .who{text-align:center}
 .who h1{font-size:21px;font-weight:800;letter-spacing:-.02em}.who h1 span{color:var(--ac)}
 .who p{font-size:12.5px;color:var(--tx2);margin-top:4px;line-height:1.5}
@@ -163,6 +97,39 @@ nav{display:flex;flex-direction:column;gap:4px}
 .dots{display:flex;gap:7px}
 .dots button{width:9px;height:9px;border-radius:50%;border:0;background:rgba(26,90,140,.25);cursor:pointer;padding:0;transition:.3s}
 .dots button.on{width:26px;border-radius:6px;background:var(--ac)}
+/* documents */
+button.chip{font:inherit;cursor:pointer}.chip.act{background:var(--ac);color:#fff;border-color:var(--ac)}
+.dtool{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.dact{display:flex;gap:8px}
+.gb{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--gb);background:rgba(255,255,255,.7);border-radius:30px;font:inherit;font-size:12.5px;font-weight:700;color:var(--tx);cursor:pointer;transition:.25s}
+.gb:hover{background:var(--ac);color:#fff}.gb.pri{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0}
+.adm{display:none!important}body.mng .adm{display:inline-flex!important}body.mng .note.adm{display:block!important}
+.note{font-size:12.5px;line-height:1.6;color:#92400e;background:#fef3c7;border:1px solid #fde68a;border-radius:12px;padding:10px 14px;margin-bottom:16px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.dc{background:rgba(255,255,255,.6);border:1px solid var(--gb);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:.3s}
+.dc:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,23,42,.1)}
+.dcov{position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,#e0f2fe,#ede9fe);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:46px;overflow:hidden}
+.dcov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dcov .ext{position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;letter-spacing:.08em;background:rgba(15,23,42,.75);color:#fff;padding:2px 8px;border-radius:10px}
+.dbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.ddesc{font-size:12px;color:var(--tx2);line-height:1.5;margin-top:2px}
+.dname{font-size:14px;font-weight:700;line-height:1.35}.dmeta{font-size:11.5px;color:var(--mu);font-weight:600}
+.dbtn{display:flex;gap:6px;margin-top:auto;padding-top:10px}
+.dbtn button,.dbtn a{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 11px;border:0;border-radius:10px;background:rgba(26,90,140,.1);color:var(--ac);font:inherit;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:.2s}
+.dbtn button:first-child{flex:1;background:var(--ac);color:#fff}.dbtn button.dng{color:#dc2626;background:#fee2e2}
+.dbtn button:hover,.dbtn a:hover{filter:brightness(.92)}
+.empty{grid-column:1/-1;text-align:center;color:var(--mu);padding:40px 10px}.empty i{font-size:44px;margin-bottom:10px}
+.mbox{width:min(480px,100%);background:#fff;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 80px rgba(0,0,0,.35);max-height:92vh;overflow:auto}
+.mbox h3{font-size:18px}.mbox label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:var(--tx2)}
+.mbox label small{font-weight:500;color:var(--mu)}
+.mbox input{padding:9px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;font-size:13.5px}
+.mact{display:flex;justify-content:flex-end;gap:8px}
+.vbox{width:min(960px,96vw);height:88vh;background:#fff;border-radius:18px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.vhd{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #e2e8f0}.vhd h3{flex:1;font-size:15px}
+.vhd a,.vhd button{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:0;border-radius:20px;background:var(--ac);color:#fff;font:inherit;font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer}
+.vhd button{background:#e2e8f0;color:var(--tx)}
+.vbody{flex:1;min-height:0;background:#f1f5f9;display:flex;align-items:center;justify-content:center;overflow:auto}
+.vbody iframe{width:100%;height:100%;border:0}.vbox .vbody img{max-width:100%;max-height:100%;object-fit:contain;border-radius:0;box-shadow:none}
 /* modal */
 .modal{position:fixed;inset:0;z-index:99;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.7);backdrop-filter:blur(10px);padding:24px}
 .modal.on{display:flex}.modal img{max-width:min(440px,100%);max-height:80vh;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
@@ -186,7 +153,7 @@ nav{display:flex;flex-direction:column;gap:4px}
    <h1>NAPHTALI <span>SUNDAY</span></h1>
    <p>Programmer · Data Analyst<br>MEAL Specialist<br>IT Specialist</p>
    <div class="loc"><i class="fas fa-location-dot"></i> Yola, Adamawa, Nigeria</div>
-   <span class="avail"><i class="fas fa-circle" style="font-size:7px"></i> Open to Work</span>
+   <span class="avail"><i class="fas fa-circle" style="font-size:7px"></i> Open to Work</span><br><span class="avail" id="prevBadge" hidden style="background:#fef3c7;color:#92400e" title="This browser has unpublished admin changes">Previewing admin changes</span>
   </div>
   <div><div class="lbl">Sections</div><nav id="nav"></nav></div>
   <div><div class="lbl">Download my Resume for offline use</div>
@@ -212,6 +179,8 @@ nav{display:flex;flex-direction:column;gap:4px}
 </div>
 <div class="modal" id="modal"><img src="milly.jpeg" alt="Naphtali Sunday" onerror="this.alt='Photo not found'"></div>
 <div class="toast" id="toast"></div>
+<div class="modal" id="viewer"><div class="vbox"><div class="vhd"><h3 id="vTitle"></h3><a id="vDl" href="#"><i class="fas fa-download"></i> Download</a><button id="vClose"><i class="fas fa-xmark"></i> Close</button></div><div class="vbody" id="vBody"></div></div></div>
+
 
 <script>
 /* ============ SINGLE SOURCE OF TRUTH (page + all resume formats) ============ */
@@ -286,6 +255,8 @@ const PG=[
    `<div class="sub" style="margin-top:20px">Certifications</div><div class="g2">${R.certs.map(c=>`<div class="card"><h3 style="font-size:14px">${esc(c[0])}</h3><div class="org" style="margin:3px 0 0">${esc(c[1])} · ${c[2]}</div></div>`).join('')}</div>`},
  {k:'Achievements',i:'fa-trophy',s:'Measurable results and milestones',
   h:()=>R.ach.map(a=>`<div class="card ach"><i class="fas ${a[0]}"></i><div><h3>${esc(a[1])}</h3><p>${esc(a[2])}</p></div></div>`).join('')},
+ {k:'My Documents',i:'fa-folder-open',s:'Certificates, credentials and supporting documents',
+  h:()=>`<div class="dtool"><div class="chips" id="docCats"></div></div><div class="dgrid" id="docGrid"></div>`},
  {k:'Contact',i:'fa-paper-plane',s:'Languages, contact details and resume',
   h:()=>`<div class="g2">`+[['fa-envelope','Email',R.email,'mailto:'+R.email],['fa-location-dot','Location',R.loc,'#'],['fa-brands fa-linkedin-in','LinkedIn',R.li,'https://www.'+R.li],['fa-brands fa-github','GitHub',R.gh,'https://'+R.gh]].map(c=>`<div class="card"><a class="ct" href="${c[3]}" target="_blank" rel="noopener"><i class="${c[0].includes('brands')?c[0]:'fas '+c[0]}"></i><div><small>${c[1]}</small><span>${esc(c[2])}</span></div></a></div>`).join('')+`</div>`+
    `<div class="sub" style="margin-top:18px">Languages</div><div class="chips">${R.langs.map(l=>`<span class="chip"><i class="fas fa-language"></i>${l[0]} · ${l[1]}</span>`).join('')}</div>`+
@@ -318,6 +289,61 @@ bk.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.
 $('avatar').onclick=()=>$('modal').classList.add('on');$('modal').onclick=()=>$('modal').classList.remove('on');
 ui();
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ============ CONTENT & DOCUMENTS ============
+   Visitors see content.json (+ the /documents folder). Edits are made on admin.html, which exports an update package. */
+const DB={o:null,open(){return this.o||(this.o=new Promise((res,rej)=>{const r=indexedDB.open('portfolioDocs',1);r.onupgradeneeded=()=>r.result.createObjectStore('docs',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
+ async tx(m,fn){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('docs',m),q=fn(t.objectStore('docs'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})},
+ all(){return this.tx('readonly',s=>s.getAll())}};
+let DOCLIST=[],docCat='All';const urls=new Map();
+const fmtSize=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+const ext=n=>String(n||'').split('.').pop().toLowerCase();
+const IMG=/^(jpe?g|png|gif|webp|svg|avif)$/;
+const isImg=d=>IMG.test(ext(d.fileName));
+const icon=e=>e==='pdf'?['fa-file-pdf','#dc2626']:/^docx?$/.test(e)?['fa-file-word','#2b579a']:e==='txt'?['fa-file-lines','#64748b']:IMG.test(e)?['fa-file-image','#16a34a']:['fa-file','#64748b'];
+const objUrl=(k,b)=>{if(!urls.has(k))urls.set(k,URL.createObjectURL(b));return urls.get(k)};
+const clean=s=>String(s).replace(/<(?!\/?b>)[^>]*>/gi,'');
+async function loadContent(){
+ let base=null,local=null,ld=[];
+ try{const r=await fetch('content.json',{cache:'no-store'});if(r.ok)base=await r.json()}catch(e){}
+ try{local=JSON.parse(localStorage.getItem('pf_content')||'null')}catch(e){}
+ try{ld=await DB.all()}catch(e){}
+ const c=local||base;
+ if(c){
+  if(Array.isArray(c.about)&&c.about.length)R.about=c.about.map(clean);
+  if(Array.isArray(c.stats)&&c.stats.length)R.stats=c.stats;
+  if(Array.isArray(c.highlights)&&c.highlights.length)R.highlights=c.highlights;
+ }
+ let list;
+ if(local&&local.docsTouched)list=ld.map(d=>({id:d.id,name:d.name,cat:d.cat,desc:d.desc,fileName:d.fileName,size:d.size,hidden:d.hidden,order:d.order,fileUrl:d.blob?objUrl(d.id,d.blob):d.url,coverUrl:d.cover?objUrl(d.id+'c',d.cover):(d.coverUrl||'')}));
+ else list=((base&&base.docs)||[]).map((d,i)=>({id:'s'+i,name:d.name,cat:d.cat,desc:d.desc,fileName:(d.file||'').split('/').pop(),hidden:d.hidden,order:i,fileUrl:d.file,coverUrl:d.cover||''}));
+ DOCLIST=list.filter(d=>!d.hidden&&d.fileUrl).sort((a,b)=>a.order-b.order);
+ $('prevBadge').hidden=!local;
+}
+function renderDocs(){
+ const cats=['All',...new Set(DOCLIST.map(d=>d.cat||'Other'))];
+ if(!cats.includes(docCat))docCat='All';
+ $('docCats').innerHTML=cats.length>2?cats.map(c=>`<button class="chip${c===docCat?' act':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join(''):'';
+ const list=DOCLIST.filter(d=>docCat==='All'||(d.cat||'Other')===docCat);
+ $('docGrid').innerHTML=list.length?list.map(d=>{const e=ext(d.fileName),ic=icon(e),cv=d.coverUrl||(isImg(d)?d.fileUrl:'');
+  return `<div class="dc"><div class="dcov" data-act="view" data-id="${d.id}">${cv?`<img src="${esc(cv)}" alt="${esc(d.name)}" loading="lazy">`:`<i class="fas ${ic[0]}" style="color:${ic[1]}"></i>`}<span class="ext">${esc(e.toUpperCase())}</span></div><div class="dbody"><div class="dname">${esc(d.name)}</div><div class="dmeta">${esc(d.cat||'Other')}${d.size?' · '+fmtSize(d.size):''}</div>${d.desc?`<div class="ddesc">${esc(d.desc)}</div>`:''}<div class="dbtn"><button data-act="view" data-id="${d.id}"><i class="fas fa-eye"></i> View</button><a href="${esc(d.fileUrl)}" download="${esc(d.fileName)}" title="Download"><i class="fas fa-download"></i></a></div></div></div>`}).join(''):`<div class="empty"><i class="fas fa-folder-open"></i><p>Documents will appear here soon.</p></div>`;
+}
+function openViewer(d){
+ const u=d.fileUrl,e=ext(d.fileName);
+ $('vTitle').textContent=d.name;$('vDl').href=u;$('vDl').download=d.fileName;
+ $('vBody').innerHTML=isImg(d)?`<img src="${esc(u)}" alt="${esc(d.name)}">`:e==='pdf'?`<iframe src="${esc(u)}" title="${esc(d.name)}"></iframe>`:`<div class="empty"><i class="fas ${icon(e)[0]}"></i><p>Preview isn't available for .${esc(e)} files.<br>Use Download to open it.</p></div>`;
+ $('viewer').classList.add('on');
+}
+const closeViewer=()=>{$('viewer').classList.remove('on');$('vBody').innerHTML=''};
+$('vClose').onclick=closeViewer;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeViewer()});
+document.addEventListener('click',e=>{
+ const c=e.target.closest('[data-cat]');if(c){docCat=c.dataset.cat;renderDocs();return}
+ const b=e.target.closest('[data-act="view"]');if(!b)return;
+ const d=DOCLIST.find(x=>x.id===b.dataset.id);if(d)openViewer(d);
+});
+renderDocs();
+loadContent().then(()=>{pages[0].innerHTML=hd(1,PG[0].k,PG[0].s)+PG[0].h();renderDocs()}).catch(e=>console.error(e));
 
 /* ============ RESUME EXPORTS ============ */
 const FN='Naphtali_Sunday_Resume';
@@ -412,4 +438,3 @@ function buildTxt(){
 </script>
 </body>
 </html>
-
