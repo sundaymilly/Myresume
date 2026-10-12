@@ -6,6 +6,7 @@
 <title>Naphtali Sunday · Web Developer, Data Analyst & MEAL Specialist</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="content.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--ac:#1a5a8c;--ac2:#2a7abf;--tx:#0f172a;--tx2:#475569;--mu:#94a3b8;--gl:rgba(255,255,255,.55);--gb:rgba(255,255,255,.75)}
@@ -305,7 +306,8 @@ const objUrl=(k,b)=>{if(!urls.has(k))urls.set(k,URL.createObjectURL(b));return u
 const clean=s=>String(s).replace(/<(?!\/?b>)[^>]*>/gi,'');
 async function loadContent(){
  let base=null,local=null,ld=[];
- try{const r=await fetch('content.json',{cache:'no-store'});if(r.ok)base=await r.json()}catch(e){}
+ base=window.PF_CONTENT||null;
+ if(!base){try{const r=await fetch('content.json',{cache:'no-store'});if(r.ok)base=await r.json()}catch(e){}}
  try{local=JSON.parse(localStorage.getItem('pf_content')||'null')}catch(e){}
  try{ld=await DB.all()}catch(e){}
  const c=local||base;
