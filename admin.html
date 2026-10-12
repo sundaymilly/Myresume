@@ -62,7 +62,7 @@ code{background:#f1f5f9;padding:1px 6px;border-radius:6px;font-size:12px}
  <div class="top">
   <h1><i class="fas fa-user-gear" style="color:var(--ac)"></i> Portfolio Admin<small>Changes are saved to the database and appear on your site immediately.</small></h1>
   <div class="btns">
-   <a class="bt" href="./" target="_blank"><i class="fas fa-eye"></i> View site</a>
+   <a class="bt" href="/" target="_blank"><i class="fas fa-eye"></i> View site</a>
    <button id="out"><i class="fas fa-right-from-bracket"></i> Sign out</button>
   </div>
  </div>
@@ -127,20 +127,20 @@ const icon=e=>e==='pdf'?['fa-file-pdf','#dc2626']:/^docx?$/.test(e)?['fa-file-wo
 async function api(path,opt={}){
  const h={...(opt.headers||{})};if(TOKEN)h.Authorization='Bearer '+TOKEN;
  const r=await fetch(path,{...opt,headers:h});
- if(r.status===401&&path!=='api/login'){showLogin();throw new Error('Please sign in')}
+ if(r.status===401&&path!=='/api/login'){showLogin();throw new Error('Please sign in')}
  let d=null;try{d=await r.json()}catch(e){}
- if(!r.ok)throw new Error((d&&d.error)||'Request failed ('+r.status+')');
+ if(!r.ok)throw new Error((d&&d.error)||(r.status===404?'The portfolio server was not found at '+location.origin+'. Start it with "node server.js" and open '+location.origin.replace(/\/$/,'')+'/admin from that server (not as a file or from another web server).':'Request failed ('+r.status+')'));
  return d;
 }
 function showLogin(){TOKEN='';sessionStorage.removeItem('pf_tok');$('app').hidden=true;$('login').hidden=false;$('pw').focus()}
 $('lform').onsubmit=async e=>{e.preventDefault();$('lerr').textContent='';
- try{const r=await api('api/login',{method:'POST',headers:JH,body:JSON.stringify({password:$('pw').value})});TOKEN=r.token;sessionStorage.setItem('pf_tok',TOKEN);$('pw').value='';await start()}
+ try{const r=await api('/api/login',{method:'POST',headers:JH,body:JSON.stringify({password:$('pw').value})});TOKEN=r.token;sessionStorage.setItem('pf_tok',TOKEN);$('pw').value='';await start()}
  catch(err){$('lerr').textContent=err.message}};
 $('out').onclick=showLogin;
 
 async function start(){
  try{
-  const [docs,c]=await Promise.all([api('api/admin/docs'),api('api/content')]);
+  const [docs,c]=await Promise.all([api('/api/admin/docs'),api('/api/content')]);
   DOCS=docs;C={about:c.about||DEF.about,stats:c.stats||DEF.stats,highlights:c.highlights||DEF.highlights};
   $('login').hidden=true;$('app').hidden=false;renderDocs();renderTxt();
  }catch(e){if(!TOKEN)showLogin();else toast(e.message)}
@@ -149,8 +149,8 @@ async function start(){
 /* ---------- documents ---------- */
 function thumb(d){
  const e=ext(d.fileName),q='?t='+TOKEN+'&v='+d.v;
- if(d.hasCover)return `<img src="files/${d.id}/cover${q}" alt="">`;
- if(IMG.test(e))return `<img src="files/${d.id}${q}" alt="">`;
+ if(d.hasCover)return `<img src="/files/${d.id}/cover${q}" alt="">`;
+ if(IMG.test(e))return `<img src="/files/${d.id}${q}" alt="">`;
  return `<i class="fas ${icon(e)[0]}" style="color:${icon(e)[1]}"></i>`;
 }
 function renderDocs(){
@@ -158,19 +158,19 @@ function renderDocs(){
   <div class="act"><button class="sm" data-a="up" data-id="${d.id}" ${i?'':'disabled'} title="Move up"><i class="fas fa-arrow-up"></i></button><button class="sm" data-a="dn" data-id="${d.id}" ${i<DOCS.length-1?'':'disabled'} title="Move down"><i class="fas fa-arrow-down"></i></button><button class="sm" data-a="vis" data-id="${d.id}"><i class="fas ${d.hidden?'fa-eye':'fa-eye-slash'}"></i> ${d.hidden?'Show':'Hide'}</button><button class="sm" data-a="ed" data-id="${d.id}"><i class="fas fa-pen"></i> Edit</button><button class="sm dng" data-a="rm" data-id="${d.id}"><i class="fas fa-trash"></i></button></div></div>`).join('')
   :`<div class="empty"><i class="fas fa-folder-open"></i><p>No documents yet. Click “Add document”.</p></div>`;
 }
-const reload=async()=>{DOCS=await api('api/admin/docs');renderDocs()};
+const reload=async()=>{DOCS=await api('/api/admin/docs');renderDocs()};
 async function move(id,dir){
  const i=DOCS.findIndex(x=>x.id===id),j=i+dir;if(j<0||j>=DOCS.length)return;
  [DOCS[i],DOCS[j]]=[DOCS[j],DOCS[i]];renderDocs();
- try{await api('api/admin/reorder',{method:'POST',headers:JH,body:JSON.stringify({ids:DOCS.map(d=>d.id)})})}catch(e){toast(e.message);reload()}
+ try{await api('/api/admin/reorder',{method:'POST',headers:JH,body:JSON.stringify({ids:DOCS.map(d=>d.id)})})}catch(e){toast(e.message);reload()}
 }
 $('list').onclick=async e=>{
  const b=e.target.closest('[data-a]');if(!b)return;const id=+b.dataset.id,d=DOCS.find(x=>x.id===id),a=b.dataset.a;if(!d)return;
  try{
   if(a==='up')move(id,-1);if(a==='dn')move(id,1);
-  if(a==='vis'){await api('api/admin/docs/'+id,{method:'PUT',headers:JH,body:JSON.stringify({hidden:!d.hidden})});await reload()}
+  if(a==='vis'){await api('/api/admin/docs/'+id,{method:'PUT',headers:JH,body:JSON.stringify({hidden:!d.hidden})});await reload()}
   if(a==='ed')openForm(d);
-  if(a==='rm'&&confirm('Delete "'+d.name+'" permanently?')){await api('api/admin/docs/'+id,{method:'DELETE'});await reload();toast('Document deleted')}
+  if(a==='rm'&&confirm('Delete "'+d.name+'" permanently?')){await api('/api/admin/docs/'+id,{method:'DELETE'});await reload();toast('Document deleted')}
  }catch(err){toast(err.message)}
 };
 function openForm(d){
@@ -188,13 +188,13 @@ $('fSave').onclick=async()=>{
  const meta=JSON.stringify({name:$('fName').value.trim()||(f?f.name.replace(/\.[^.]+$/,''):''),cat:$('fCat').value.trim(),desc:$('fDesc').value.trim()});
  $('fSave').disabled=true;let id=editId,created=false;
  try{
-  if(!id){const r=await api('api/admin/docs',{method:'POST',headers:JH,body:meta});id=r.id;created=true}
-  else await api('api/admin/docs/'+id,{method:'PUT',headers:JH,body:meta});
-  const up=(part,file)=>api(`api/admin/docs/${id}/${part}?name=${encodeURIComponent(file.name)}`,{method:'PUT',headers:{'Content-Type':'application/octet-stream'},body:file});
+  if(!id){const r=await api('/api/admin/docs',{method:'POST',headers:JH,body:meta});id=r.id;created=true}
+  else await api('/api/admin/docs/'+id,{method:'PUT',headers:JH,body:meta});
+  const up=(part,file)=>api(`/api/admin/docs/${id}/${part}?name=${encodeURIComponent(file.name)}`,{method:'PUT',headers:{'Content-Type':'application/octet-stream'},body:file});
   if(f)await up('file',f);if(cv)await up('cover',cv);
   $('m').classList.remove('on');await reload();toast(created?'Document added and live on your site':'Changes saved')
  }catch(err){
-  if(created&&id)try{await api('api/admin/docs/'+id,{method:'DELETE'})}catch(e){}
+  if(created&&id)try{await api('/api/admin/docs/'+id,{method:'DELETE'})}catch(e){}
   toast(err.message);
  }finally{$('fSave').disabled=false}
 };
@@ -215,10 +215,10 @@ $('addSt').onclick=()=>{readTxt();C.stats.push(['','']);renderTxt()};
 $('abouts').onclick=e=>{const b=e.target.closest('[data-rm]');if(b){readTxt();C.about.splice(+b.dataset.rm,1);renderTxt()}};
 $('stats').onclick=e=>{const b=e.target.closest('[data-rs]');if(b){readTxt();C.stats.splice(+b.dataset.rs,1);renderTxt()}};
 $('saveTxt').onclick=async()=>{readTxt();
- try{await api('api/admin/content',{method:'PUT',headers:JH,body:JSON.stringify(C)});toast('Saved. Your site is updated')}catch(e){toast(e.message)}};
+ try{await api('/api/admin/content',{method:'PUT',headers:JH,body:JSON.stringify(C)});toast('Saved. Your site is updated')}catch(e){toast(e.message)}};
 
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t))});
-TOKEN?start():showLogin();
+if(location.protocol==='file:'){document.body.innerHTML='<div class="login"><div class="lbox"><i class="fas fa-triangle-exclamation big"></i><h1>Open through the server</h1><p>This page was opened as a file. Run <code>node server.js</code> and visit <code>http://localhost:3000/admin</code> instead.</p></div></div>'}else TOKEN?start():showLogin();
 </script>
 </body>
 </html>
